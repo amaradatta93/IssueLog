@@ -1,0 +1,57 @@
+{% include 'base.html' %}
+{% block content %}
+<div class="table-responsive">
+    <table class="table w-auto small table-fit">
+        <thead class="thead-dark">
+        <tr>
+            <th class="fit" scope="col">Customer Name</th>
+            <th class="fit" scope="col">Company</th>
+            <th class="fit" scope="col">Issue Report Date</th>
+            <th class="fit text-wrap" scope="col">Issue Description</th>
+            <th class="fit" scope="col">Domain</th>
+            <th class="fit" scope="col">Priority</th>
+            <th class="fit" scope="col">Support Engineer</th>
+            <th class="fit" scope="col">Status</th>
+            <th class="fit text-wrap" scope="col">Support Engineer Comments</th>
+            <th class="fit" scope="col">Status</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for issue in issues %}
+        <tr class="fit">
+            {% if issue.Status == 'Working' %}
+            <td class="fit" style="background:#FFCCCB;">{{issue['Customer Name']}}</td>
+            <td class="fit" style="background:#FFCCCB;">{{issue['Company']}}</td>
+            <td class="fit" style="background:#FFCCCB;">{{issue['Issue Report Date']}}</td>
+            <td class="fit text-wrap" style="background-color:#FFCCCB;">{{issue['Issue Description']}}</td>
+            <td class="fit" style="background:#FFCCCB;">{{issue['Domain']}}</td>
+            <td class="fit" style="background:#FFCCCB;">{{issue['Priority']}}</td>
+            <td class="fit" style="background:#FFCCCB;">{{issue['Support Engineer']}}</td>
+            <td class="fit" style="background:#FFCCCB;">{{issue['Status']}}</td>
+            <td class="fit text-wrap" style="background:#FFCCCB;">{{issue['Support Engineer Comments']}}</td>
+            <td style="background:#FFCCCB;">
+                <button type="button" class="btn btn-primary"><i class="fas fa-eye"></i></button>
+                <button type="button" class="btn btn-success"><i class="fas fa-edit"></i></button>
+            </td>
+            {% else %}
+            <td class="fit">{{issue['Customer Name']}}</td>
+            <td class="fit">{{issue['Company']}}</td>
+            <td class="fit">{{issue['Issue Report Date']}}</td>
+            <td class="fit text-wrap">{{issue['Issue Description']}}</td>
+            <td class="fit">{{issue['Domain']}}</td>
+            <td class="fit">{{issue['Priority']}}</td>
+            <td class="fit">{{issue['Support Engineer']}}</td>
+            <td class="fit">{{issue['Status']}}</td>
+            <td class="fit text-wrap">{{issue['Support Engineer Comments']}}</td>
+            <td>
+                <button type="button" class="btn btn-primary"><i class="fas fa-eye"></i></button>
+                <button type="button" class="btn btn-success"><i class="fas fa-edit"></i></button>
+            </td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
