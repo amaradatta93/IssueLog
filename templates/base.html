@@ -9,6 +9,7 @@
               integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
               integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+        <link rel="stylesheet" href="static/dash-style.css">
 
         <style>
             html, body {
@@ -20,10 +21,54 @@
 
     </head>
 
-    <body>
+    <header>
+        <nav class="navbar fixed-top  navbar-expand-lg navbar-dark bg-dark" id="navbarHeader">
+            <a class="navbar-brand" href="{{ url_for('main') }}">Issue Log</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('resolved') }}">
+                            <button class="btn btn-outline-success" type="button">
+                                <i class="fas fa-check-circle"></i> Resolved
+                            </button>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('unresolved') }}">
+                            <button class="btn btn-outline-danger" type="button">
+                                <i class="fas fa-times-circle"></i> Unresolved
+                            </button>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <button class="btn btn-outline-info" type="button">
+                                <i class="fas fa-plus-square"></i> Add Issue
+                            </button>
+                        </a>
+                    </li>
+                </ul>
+
+                <form class="form-inline my-2 my-lg-0" action="#">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search"
+                           aria-label="Search" name="search_param">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                </form>
+
+            </div>
+        </nav>
+    </header>
+
+    <body style="padding-top: 35px;">
 
         <div class="container-fluid">
-            <div class="row align-items-center justify-content-center">
+            <div class="row mt-3 align-items-center justify-content-center">
                 <div class="col-lg-12">
                     {% block content %}
                     {% endblock %}
