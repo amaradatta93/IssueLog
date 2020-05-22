@@ -1,0 +1,158 @@
+{% include 'base.html' %}
+{% block content %}
+
+<div class="container mt-3" style="padding-top: 10px;">
+    <div class="row mt-3 justify-content-center align-items-center">
+        <div class="col-md-12">
+
+            <form enctype="multipart/form-data" action="{{ url_for('') }}" method="POST">
+                <fieldset class="form-group">
+
+                    <div class="form-group row">
+                        <label for="customerName" class="col-sm-2 col-form-label">Customer Name</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="customerName"
+                                   name="customer_name" placeholder="Customer Name">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="company" class="col-sm-2 col-form-label">Company</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="company"
+                                   name="company" placeholder="Company">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <legend class="col-form-label col-sm-2 pt-0">Source</legend>
+                        <div class="col-sm-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="source" id="phone"
+                                       value="Phone" checked>
+                                <label class="form-check-label" for="phone">
+                                    Phone
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="source" id="email"
+                                       value="E-Mail">
+                                <label class="form-check-label" for="email">
+                                    E - Mail
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-sm-2 col-form-label">E - Mail</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="inputEmail3"
+                                   name="e_mail" placeholder="name@example.com">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="phoneNumber" class="col-sm-2 col-form-label">Phone</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="phoneNumber"
+                                   name="phone_number" placeholder="1234567890">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="issueReportDate" class="col-sm-2 col-form-label">Issue Report Date</label>
+                        <div class="col-sm-6">
+                            <input type="date" class="form-control" id="issueReportDate" name="issue_report_date">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="issueDescription" class="col-sm-2 col-form-label">Issue Description</label>
+                        <div class="col-sm-6">
+                            <textarea class="form-control" id="issueDescription"
+                                      rows="5" name="issue_description"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <legend class="col-form-label col-sm-2 pt-0">Domain</legend>
+                        <div class="col-sm-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="domain" id="fleet"
+                                       value="Fleet" checked>
+                                <label class="form-check-label" for="fleet">
+                                    Fleet
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="domain" id="hos"
+                                       value="HOS">
+                                <label class="form-check-label" for="hos">
+                                    HOS
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="priority" class="col-sm-2 col-form-label">Priority</label>
+                        <div class="col-sm-6">
+                            <select class="form-control" id="priority" name="priority">
+                                <option value="Low">Low</option>
+                                <option value="Medium">Medium</option>
+                                <option value="High">High</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="supportEngineer" class="col-sm-2 col-form-label">Support Engineer</label>
+                        <div class="col-sm-6">
+                            <select class="form-control" id="supportEngineer" name="support_engineer">
+                                <option value="Amara">Amara</option>
+                                <option value="Ravi">Ravi</option>
+                                <option value="Sridhar">Sridhar</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="issueFixedDate" class="col-sm-2 col-form-label">Issue Fixed Date</label>
+                        <div class="col-sm-6">
+                            <input type="date" class="form-control" id="issueFixedDate" name="issue_fixed_date">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="status" class="col-sm-2 col-form-label">Status</label>
+                        <div class="col-sm-6">
+                            <select class="form-control" id="status" name="status">
+                                <option value="Working">Working</option>
+                                <option value="Fixed">Fixed</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="supportEngineerComments" class="col-sm-2 col-form-label">Support Engineer
+                            Comments</label>
+                        <div class="col-sm-6">
+                            <textarea class="form-control" id="supportEngineerComments"
+                                      rows="2" name="support_engineer_comments"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group row justify-content-center align-items-center">
+                        <div class="col-sm-3">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

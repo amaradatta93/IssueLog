@@ -1,14 +1,23 @@
-import os
+from flask_sqlalchemy import SQLAlchemy
 
-from flask import Flask
-from flaskext.mysql import MySQL
+from config import app
 
-app = Flask(__name__)
-mysql = MySQL()
+db = SQLAlchemy(app)
 
-# MySQL configurations
-app.config['MYSQL_DATABASE_USER'] = os.getenv('MYSQL_DATABASE_USER')
-app.config['MYSQL_DATABASE_PASSWORD'] = os.getenv('MYSQL_DATABASE_PASSWORD')
-app.config['MYSQL_DATABASE_DB'] = os.getenv('MYSQL_DATABASE_DB')
-app.config['MYSQL_DATABASE_HOST'] = os.getenv('MYSQL_DATABASE_HOST')
-mysql.init_app(app)
+
+class Issues(db.Model):
+    __tablename__ = 'issues'
+    customer_name = db.Column(db.String(255), nullable=False)
+    company = db.Column(db.String(255), nullable=False)
+    source = db.Column(db.String(255), nullable=False)
+    email = db.Column(db.String(255), nullable=False)
+    phone = db.Column(db.String(255), nullable=False)
+    issue_report_date = db.Column(db.String(10), nullable=False)
+    issue_description = db.Column(db.Text, nullable=False)
+    domain = db.Column(db.String(255), nullable=False)
+    priority = db.Column(db.String(255), nullable=False)
+    support_engineer = db.Column(db.String(255), nullable=False)
+    issue_fix_date = db.Column(db.String(10), nullable=False)
+    status = db.Column(db.String(255), nullable=False)
+    support_engineer_comments = db.Column(db.Text, nullable=False)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
