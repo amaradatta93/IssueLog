@@ -1,4 +1,4 @@
-from wtforms import Form, StringField, RadioField, SelectField, DateField
+from wtforms import Form, StringField, RadioField, SelectField, DateField, TextAreaField
 from wtforms.widgets import TextArea
 
 
@@ -9,10 +9,11 @@ class IssueForm(Form):
     e_mail = StringField()
     phone_number = StringField()
     issue_report_date = DateField()
-    issue_description = TextArea()
+    issue_description = TextAreaField('issue_description')
     domain = RadioField('domain', choices=[('Fleet', 'Fleet'), ('HOS', 'HOS')])
     priority = SelectField('priority', choices=[('Low', 'Low'), ('Medium', 'Medium'), ('High', 'High')])
-    support_engineer = SelectField('support_engineer', choices=[('Amara', 'Amara'), ('Ravi', 'Ravi'), ('Sridhar', 'Sridhar')])
+    support_engineer = SelectField('support_engineer',
+                                   choices=[('Amara', 'Amara'), ('Ravi', 'Ravi'), ('Sridhar', 'Sridhar')])
     issue_fixed_date = DateField()
     status = SelectField('status', choices=[('Working', 'Working'), ('Fixed', 'Fixed')])
-    support_engineer_comments = TextArea()
+    support_engineer_comments = TextAreaField('support_engineer_comments')
