@@ -5,6 +5,10 @@
     background:#B8DAFE;
 }
 
+.issue {
+    white-space: pre-wrap;
+}
+
 .highlight {
     background:#FFCCCB;
 }
