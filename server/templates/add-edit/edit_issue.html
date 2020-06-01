@@ -36,7 +36,7 @@
                                            checked required>{{ request.form['source'] or issues['source'] }}
                                 </label>
                             </div>
-                            {% if issues['source'] == 'E-Mail' %}
+                            {% if issues['source'] == 'E-Mail' or issues['source'] == 'E-mail'  %}
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="source" id="phone"
                                        value="Phone">

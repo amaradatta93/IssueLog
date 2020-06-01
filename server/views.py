@@ -1,4 +1,4 @@
-from flask import render_template, request, Blueprint
+from flask import render_template, request, Blueprint, flash, url_for
 from flask.views import MethodView
 from werkzeug.utils import redirect
 
@@ -40,7 +40,8 @@ class Main(MethodView):
             return redirect('/')
         else:
             print(form.errors)
-            return 'Failed'
+            flash(form.errors)
+            return redirect(url_for('dashboard.add-issue'))
 
 
 dashboard.add_url_rule('/', view_func=Main.as_view('main'))
@@ -107,10 +108,13 @@ class Modify(MethodView):
                 return redirect('/')
             except Exception as e:
                 print(e)
-                return 'Failed to save, try again'
+                flash(e)
+                return redirect(url_for('issues.edit_issue', issue_id=issue_id))
+
         else:
             print(form.errors)
-            return f'Failed because of following errors {form.errors}'
+            flash(form.errors)
+            return redirect(url_for('issues.edit_issue', issue_id=issue_id))
 
 
 issues.add_url_rule('/modify/<int:issue_id>', view_func=Modify.as_view('modify'))
@@ -127,7 +131,8 @@ class Delete(MethodView):
             return redirect('/')
         except Exception as e:
             print(e)
-            return f'Failed to delete the Issue {issue_id}'
+            flash(e)
+            return redirect(url_for('issues.edit_issue', issue_id=issue_id))
 
 
 issues.add_url_rule('/delete/<int:issue_id>', view_func=Delete.as_view('delete'))

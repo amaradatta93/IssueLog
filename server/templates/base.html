@@ -9,6 +9,7 @@
               integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
               integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+        <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
         <link rel="stylesheet" href="static/dash-style.css">
 
         <style>
@@ -71,7 +72,24 @@
         </nav>
     </header>
 
-    <body style="padding-top: 35px;">
+    <body class="body" style="padding-top: 35px;">
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="row align-items-center justify-content-center" style="padding-top: 35px;">
+                    <div class="col-lg-6">
+                        {% for message in messages %}
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        {% endwith %}
 
         <div class="container-fluid">
             <div class="row mt-3 align-items-center justify-content-center">

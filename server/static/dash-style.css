@@ -1,6 +1,11 @@
 .table {
     overflow-x: hidden;
 }
+
+.body {
+    overflow-x: hidden;
+}
+
 .thead th {
     background:#B8DAFE;
 }
