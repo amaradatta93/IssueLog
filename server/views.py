@@ -1,14 +1,17 @@
 from flask import render_template, request, Blueprint
 from flask.views import MethodView
+from werkzeug.utils import redirect
+
+from server.auth import login_required
 from server.db import Issues, db
 from server.forms import IssueForm
-from werkzeug.utils import redirect
 
 dashboard = Blueprint('dashboard', __name__)
 issues = Blueprint('issues', __name__)
 
 
 class Main(MethodView):
+    decorators = [login_required]
 
     def get(self):
         issue_json_data = Issues.query.all()
@@ -44,6 +47,7 @@ dashboard.add_url_rule('/', view_func=Main.as_view('main'))
 
 
 class Resolved(MethodView):
+    decorators = [login_required]
 
     def get(self):
         issue_json_data = Issues.query.filter(Issues.status == 'Fixed')
@@ -54,6 +58,7 @@ dashboard.add_url_rule('/resolved', view_func=Resolved.as_view('resolved'))
 
 
 class Unresolved(MethodView):
+    decorators = [login_required]
 
     def get(self):
         issue_json_data = Issues.query.filter(Issues.status == 'Working')
@@ -64,6 +69,7 @@ dashboard.add_url_rule('/unresolved', view_func=Unresolved.as_view('unresolved')
 
 
 class Search(MethodView):
+    decorators = [login_required]
 
     def get(self):
         search_param = request.args.get('search_param')
@@ -75,6 +81,7 @@ dashboard.add_url_rule('/search', view_func=Search.as_view('search'))
 
 
 class Modify(MethodView):
+    decorators = [login_required]
 
     def post(self, issue_id):
         form = IssueForm(request.form)
@@ -110,6 +117,7 @@ issues.add_url_rule('/modify/<int:issue_id>', view_func=Modify.as_view('modify')
 
 
 class Delete(MethodView):
+    decorators = [login_required]
 
     def post(self, issue_id):
         try:
@@ -126,13 +134,14 @@ issues.add_url_rule('/delete/<int:issue_id>', view_func=Delete.as_view('delete')
 
 
 class IssueOperation(MethodView):
+    decorators = [login_required]
 
     def get(self, issue_id=None):
         if issue_id:
             issue_json_data = Issues.query.get(issue_id).as_dict()
             form = IssueForm(formdata=request.form, obj=issue_json_data)
-            return render_template('edit_issue.html', issues=issue_json_data, form=form)
-        return render_template('add_issue.html')
+            return render_template('add-edit/edit_issue.html', issues=issue_json_data, form=form)
+        return render_template('add-edit/add_issue.html')
 
 
 dashboard.add_url_rule('/add-issue', view_func=IssueOperation.as_view('add_issue'))
