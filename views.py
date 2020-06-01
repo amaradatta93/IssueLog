@@ -34,7 +34,7 @@ class Main(MethodView):
             issue.support_engineer_comments = form.support_engineer_comments.data
             db.session.add(issue)
             db.session.commit()
-            return redirect('')
+            return redirect('/')
         else:
             print(form.errors)
             return 'Failed'
@@ -80,32 +80,49 @@ class Modify(MethodView):
         form = IssueForm(request.form)
 
         if form.validate():
-            issue = Issues.query.get(issue_id)
-            issue.customer_name = form.customer_name.data
-            issue.company = form.company.data
-            issue.source = form.source.data
-            issue.email = form.e_mail.data
-            issue.phone = form.phone_number.data
-            issue.issue_report_date = form.issue_report_date.data
-            issue.issue_description = form.issue_description.data
-            issue.domain = form.domain.data
-            issue.priority = form.priority.data
-            issue.support_engineer = form.support_engineer.data
-            issue.issue_fix_date = form.issue_fixed_date.data
-            issue.status = form.status.data
-            issue.support_engineer_comments = form.support_engineer_comments.data
-            db.session.add(issue)
-            db.session.commit()
-            return redirect('/')
+            try:
+                issue = Issues.query.get(issue_id)
+                issue.customer_name = form.customer_name.data
+                issue.company = form.company.data
+                issue.source = form.source.data
+                issue.email = form.e_mail.data
+                issue.phone = form.phone_number.data
+                issue.issue_report_date = form.issue_report_date.data
+                issue.issue_description = form.issue_description.data
+                issue.domain = form.domain.data
+                issue.priority = form.priority.data
+                issue.support_engineer = form.support_engineer.data
+                issue.issue_fix_date = form.issue_fixed_date.data
+                issue.status = form.status.data
+                issue.support_engineer_comments = form.support_engineer_comments.data
+                db.session.add(issue)
+                db.session.commit()
+                return redirect('/')
+            except Exception as e:
+                print(e)
+                return 'Failed to save, try again'
         else:
             print(form.errors)
-            return 'Failed'
-
-    def delete(self, issue_id):
-        pass
+            return f'Failed because of following errors {form.errors}'
 
 
 issues.add_url_rule('/modify/<int:issue_id>', view_func=Modify.as_view('modify'))
+
+
+class Delete(MethodView):
+
+    def post(self, issue_id):
+        try:
+            issue = Issues.query.get(issue_id)
+            db.session.delete(issue)
+            db.session.commit()
+            return redirect('/')
+        except Exception as e:
+            print(e)
+            return f'Failed to delete the Issue {issue_id}'
+
+
+issues.add_url_rule('/delete/<int:issue_id>', view_func=Delete.as_view('delete'))
 
 
 class IssueOperation(MethodView):
