@@ -29,8 +29,7 @@
                 <div class="row align-items-center justify-content-center">
                     <button type="button" class="btn btn-primary" data-toggle="modal"
                             data-target="#issueModal{{issue.id}}">
-                        <i class="fas fa-eye"></i>
-                    </button>
+                        <i class="fas fa-eye"></i></button>
                 </div>
 
                 <div class="modal fade" id="issueModal{{issue.id}}" tabindex="-1" role="dialog"
@@ -68,7 +67,7 @@
                 </div>
 
                 <div class="row align-items-center justify-content-center">
-                    <a class="nav-link" href="{{ url_for('edit_issue', issue_id=issue.id) }}">
+                    <a class="nav-link" href="{{ url_for('issues.edit_issue', issue_id=issue.id) }}">
                         <button type="button" class="btn btn-success"><i class="fas fa-edit"></i></button>
                     </a>
                 </div>

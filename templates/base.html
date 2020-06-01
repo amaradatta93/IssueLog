@@ -23,7 +23,7 @@
 
     <header>
         <nav class="navbar fixed-top  navbar-expand-lg navbar-dark bg-dark" id="navbarHeader">
-            <a class="navbar-brand" href="{{ url_for('') }}">Issue Log</a>
+            <a class="navbar-brand" href="{{ url_for('dashboard.main') }}">Issue Log</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse"
                     data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
@@ -33,21 +33,21 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('resolved') }}">
+                        <a class="nav-link" href="{{ url_for('dashboard.resolved') }}">
                             <button class="btn btn-outline-success" type="button">
                                 <i class="fas fa-check-circle"></i> Resolved
                             </button>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('unresolved') }}">
+                        <a class="nav-link" href="{{ url_for('dashboard.unresolved') }}">
                             <button class="btn btn-outline-danger" type="button">
                                 <i class="fas fa-times-circle"></i> Unresolved
                             </button>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('add_issue') }}">
+                        <a class="nav-link" href="{{ url_for('dashboard.add_issue') }}">
                             <button class="btn btn-outline-info" type="button">
                                 <i class="fas fa-plus-square"></i> Add Issue
                             </button>
@@ -55,7 +55,7 @@
                     </li>
                 </ul>
 
-                <form class="form-inline my-2 my-lg-0" action="{{ url_for('search') }}">
+                <form class="form-inline my-2 my-lg-0" action="{{ url_for('dashboard.search') }}">
                     <input class="form-control mr-sm-2" type="search" placeholder="Search"
                            aria-label="Search" name="search_param">
                     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>

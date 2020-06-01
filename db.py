@@ -1,8 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 
-from config import app
-
-db = SQLAlchemy(app)
+db = SQLAlchemy()
 
 
 class Issues(db.Model):
