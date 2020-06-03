@@ -41,7 +41,7 @@ class Main(MethodView):
         else:
             print(form.errors)
             flash(form.errors)
-            return redirect(url_for('dashboard.add-issue'))
+            return redirect(url_for('dashboard.add_issue'))
 
 
 dashboard.add_url_rule('/', view_func=Main.as_view('main'))
