@@ -43,11 +43,11 @@ def login():
         username = request.form['username']
         password = request.form['password']
         error = None
-        user = User.query.filter_by(username=username).first_or_404()
-
-        import pprint
-        pprint.pprint(username)
-        pprint.pprint(user.username)
+        try:
+            user = User.query.filter_by(username=username).first_or_404()
+        except Exception as e:
+            print(e)
+            user = None
 
         if user is None:
             error = 'Incorrect username.'
