@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
 import { Issue } from '../models/issue';
 import { DashboardService } from '../services/dashboard.service';
 
@@ -10,7 +13,8 @@ import { DashboardService } from '../services/dashboard.service';
 export class DashboardComponent implements OnInit {
   issues: Issue[];
 
-  constructor(private dashboardService: DashboardService) { }
+  constructor(private dashboardService: DashboardService,
+      private modalService: NgbModal) { }
 
   ngOnInit(): void {
     this.getIssues();
@@ -19,6 +23,10 @@ export class DashboardComponent implements OnInit {
   getIssues(): void {
     this.dashboardService.getPosts()
     .subscribe((issues: any) => this.issues = issues.issues);
+  }
+
+  openScrollableContent(longContent) {
+    this.modalService.open(longContent, { scrollable: true });
   }
 
 }

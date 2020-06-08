@@ -2,6 +2,7 @@
     <table class="table small table-fit">
         <thead class="thead">
             <tr>
+                <th>Ticket#</th>
                 <th>Company</th>
                 <th>Issue Report Date</th>
                 <th>Issue Description</th>
@@ -15,6 +16,7 @@
 
         <tbody *ngFor="let issue of issues">
             <tr>
+                <td>{{issue.id}}</td>
                 <td>{{issue.company}}</td>
                 <td>{{issue.issue_report_date}}</td>
                 <td>{{issue.issue_description}}</td>
@@ -24,8 +26,38 @@
                 <td>{{issue.status}}</td>
                 <td>
                     <a class="nav-link" href="#">
-                        <button type="button" class="btn btn-success"><i class="fas fa-eye"></i></button>
+                        <button type="button" class="btn btn-success" (click)="openScrollableContent(longContent)">
+                            <i class="fas fa-eye"></i>
+                        </button>
                     </a>
+
+                    <ng-template #longContent let-modal>
+                        <div class="modal-header">
+                            <h4 class="modal-title">Ticket# {{issue.id}}</h4>
+                            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <b>ID:</b> {{issue.id}} <br>
+                            <b>Customer Name:</b> {{issue.customer_name}} <br>
+                            <b>Company:</b> {{issue.company}} <br>
+                            <b>Source:</b> {{issue.source}} <br>
+                            <b>E - mail:</b> {{issue.email}} <br>
+                            <b>Phone:</b> {{issue.phone}} <br>
+                            <b>Issue Report Date:</b> {{issue.issue_report_date}} <br>
+                            <b>Issue Description:</b> {{issue.issue_description}} <br>
+                            <b>Domain:</b> {{issue.domain}} <br>
+                            <b>Priority:</b> {{issue.priority}} <br>
+                            <b>Support Engineer:</b> {{issue.support_engineer}} <br>
+                            <b>Issue Fix Date:</b> {{issue.issue_fix_date}} <br>
+                            <b>Status:</b> {{issue.status}} <br>
+                            <b>Support Engineer Comments:</b> {{issue.support_engineer_comments}} <br>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
+                        </div>
+                    </ng-template>
 
                     <a class="nav-link" href="#">
                         <button type="button" class="btn btn-warning"><i class="fas fa-edit"></i></button>
