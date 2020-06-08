@@ -1,6 +1,8 @@
+from flask_marshmallow import Marshmallow
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
+ma = Marshmallow()
 
 
 class Issues(db.Model):
@@ -37,6 +39,14 @@ class Issues(db.Model):
             'support_engineer_comments': self.support_engineer_comments,
             'id': self.id
         }
+
+
+class IssuesSchema(ma.Schema):
+    class Meta:
+        fields = (
+            'customer_name', 'company', 'source', 'email', 'phone', 'issue_report_date', 'issue_description', 'domain',
+            'priority', 'support_engineer', 'issue_fix_date', 'status', 'support_engineer_comments', 'id'
+        )
 
 
 class User(db.Model):

@@ -1,0 +1,38 @@
+<div class="table mt-3">
+    <table class="table small table-fit">
+        <thead class="thead">
+            <tr>
+                <th>Company</th>
+                <th>Issue Report Date</th>
+                <th>Issue Description</th>
+                <th>Priority</th>
+                <th>Domain</th>
+                <th>Support Engineer</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody *ngFor="let issue of issues">
+            <tr>
+                <td>{{issue.company}}</td>
+                <td>{{issue.issue_report_date}}</td>
+                <td>{{issue.issue_description}}</td>
+                <td>{{issue.priority}}</td>
+                <td>{{issue.domain}}</td>
+                <td>{{issue.support_engineer}}</td>
+                <td>{{issue.status}}</td>
+                <td>
+                    <a class="nav-link" href="#">
+                        <button type="button" class="btn btn-success"><i class="fas fa-eye"></i></button>
+                    </a>
+
+                    <a class="nav-link" href="#">
+                        <button type="button" class="btn btn-warning"><i class="fas fa-edit"></i></button>
+                    </a>
+
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

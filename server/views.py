@@ -1,21 +1,32 @@
-from flask import render_template, request, Blueprint, flash, url_for
+from flask import render_template, request, Blueprint, flash, url_for, jsonify
 from flask.views import MethodView
+from flask_cors import CORS
 from werkzeug.utils import redirect
 
 from server.auth import login_required
-from server.db import Issues, db
+from server.db import Issues, IssuesSchema, db
 from server.forms import IssueForm
 
 dashboard = Blueprint('dashboard', __name__)
+CORS(dashboard)
 issues = Blueprint('issues', __name__)
+CORS(issues)
+
+issue_schema = IssuesSchema()
+issues_schema = IssuesSchema(many=True)
 
 
 class Main(MethodView):
-    decorators = [login_required]
+    # decorators = [login_required]
 
-    def get(self):
-        issue_json_data = Issues.query.all()
-        return render_template('dashboard.html', issues=issue_json_data)
+    def get(self, issue_id=None):
+        if issue_id:
+            response = Issues.query.get(issue_id)
+            issue_json_data = issue_schema.dump(response)
+            return jsonify(issue=issue_json_data)
+        response = Issues.query.all()
+        issue_json_data = issues_schema.dump(response)
+        return jsonify(issues=issue_json_data)
 
     def post(self):
         form = IssueForm(request.form)
@@ -45,37 +56,41 @@ class Main(MethodView):
 
 
 dashboard.add_url_rule('/', view_func=Main.as_view('main'))
+dashboard.add_url_rule('/<int:issue_id>', view_func=Main.as_view('vis'))
 
 
 class Resolved(MethodView):
-    decorators = [login_required]
+    # decorators = [login_required]
 
     def get(self):
-        issue_json_data = Issues.query.filter(Issues.status == 'Fixed')
-        return render_template('dashboard.html', issues=issue_json_data)
+        response = Issues.query.filter(Issues.status == 'Fixed')
+        issue_json_data = issues_schema.dump(response)
+        return jsonify(issues=issue_json_data)
 
 
 dashboard.add_url_rule('/resolved', view_func=Resolved.as_view('resolved'))
 
 
 class Unresolved(MethodView):
-    decorators = [login_required]
+    # decorators = [login_required]
 
     def get(self):
-        issue_json_data = Issues.query.filter(Issues.status == 'Working')
-        return render_template('dashboard.html', issues=issue_json_data)
+        response = Issues.query.filter(Issues.status == 'Working')
+        issue_json_data = issues_schema.dump(response)
+        return jsonify(issues=issue_json_data)
 
 
 dashboard.add_url_rule('/unresolved', view_func=Unresolved.as_view('unresolved'))
 
 
 class Search(MethodView):
-    decorators = [login_required]
+    # decorators = [login_required]
 
     def get(self):
         search_param = request.args.get('search_param')
-        issue_json_data = Issues.query.filter(Issues.issue_description.contains(search_param))
-        return render_template('dashboard.html', issues=issue_json_data)
+        response = Issues.query.filter(Issues.issue_description.contains(search_param))
+        issue_json_data = issues_schema.dump(response)
+        return jsonify(issues=issue_json_data)
 
 
 dashboard.add_url_rule('/search', view_func=Search.as_view('search'))
