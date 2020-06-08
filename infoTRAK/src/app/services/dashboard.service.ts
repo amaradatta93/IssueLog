@@ -12,9 +12,13 @@ export class DashboardService {
 
   constructor(private http: HttpClient) {}
 
-  private dashboardUrl = 'http://127.0.0.1:5000/';
+  getIssues(): Observable<Issue[]> {
+    let dashboardUrl = 'http://127.0.0.1:5000/';
+    return this.http.get<Issue[]>(dashboardUrl);
+  }
 
-  getPosts(): Observable<Issue[]> {
-    return this.http.get<Issue[]>(this.dashboardUrl);
+  getSearchedIssues(search_param: string): Observable<Issue[]> {
+    let searchIssueUrl = `http://127.0.0.1:5000/search?search_param=${search_param}`;
+    return this.http.get<Issue[]>(searchIssueUrl);
   }
 }
