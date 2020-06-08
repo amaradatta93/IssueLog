@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 
-import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-navbar',
@@ -9,10 +8,16 @@ import { FormControl } from '@angular/forms';
 })
 export class NavbarComponent implements OnInit {
   searchValue: string;
+  @Output() statusUpdate = new EventEmitter();
 
   constructor() { }
 
   ngOnInit(): void {
+
+  }
+
+  selected(event, value: any) {
+    this.statusUpdate.emit(value);
   }
 
 }

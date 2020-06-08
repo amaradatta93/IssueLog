@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, OnChanges } from '@angular/core';
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -11,9 +11,14 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnChanges {
   issues: Issue[];
   search_params: string;
+  filterValue = null;
+
+  onChangeStatus(value: any) {
+    this.filterValue = value;
+  }
 
   constructor(private dashboardService: DashboardService,
     private activatedRoute: ActivatedRoute,
@@ -21,6 +26,11 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.getIssues();
+
+  }
+
+  ngOnChanges() {
+    this.filterValue;
   }
 
   getIssues(): void {

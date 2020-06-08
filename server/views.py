@@ -1,16 +1,11 @@
-from flask import render_template, request, Blueprint, flash, url_for, jsonify
+from flask import request, Blueprint, flash, jsonify
 from flask.views import MethodView
 from flask_cors import CORS
-from werkzeug.utils import redirect
 
-from server.auth import login_required
 from server.db import Issues, IssuesSchema, db
-from server.forms import IssueForm
 
 dashboard = Blueprint('dashboard', __name__)
 CORS(dashboard)
-issues = Blueprint('issues', __name__)
-CORS(issues)
 
 issue_schema = IssuesSchema()
 issues_schema = IssuesSchema(many=True)
@@ -20,67 +15,88 @@ class Main(MethodView):
     # decorators = [login_required]
 
     def get(self, issue_id=None):
-        if issue_id:
-            response = Issues.query.get(issue_id)
-            issue_json_data = issue_schema.dump(response)
-            return jsonify(issue=issue_json_data)
-        response = Issues.query.all()
-        issue_json_data = issues_schema.dump(response)
-        return jsonify(issues=issue_json_data)
+        if request.method == "GET":
+
+            if issue_id:
+                response = Issues.query.get(issue_id)
+                issue_json_data = issue_schema.dump(response)
+                return jsonify(issue=issue_json_data)
+            response = Issues.query.all()
+            issue_json_data = issues_schema.dump(response)
+            return jsonify(issues=issue_json_data)
 
     def post(self):
-        form = IssueForm(request.form)
-
-        if form.validate():
+        if request.method == "POST":
+            new_issue = request.get_json()
             issue = Issues()
-            issue.customer_name = form.customer_name.data
-            issue.company = form.company.data
-            issue.source = form.source.data
-            issue.email = form.e_mail.data
-            issue.phone = form.phone_number.data
-            issue.issue_report_date = form.issue_report_date.data
-            issue.issue_description = form.issue_description.data
-            issue.domain = form.domain.data
-            issue.priority = form.priority.data
-            issue.support_engineer = form.support_engineer.data
-            issue.issue_fix_date = form.issue_fixed_date.data
-            issue.status = form.status.data
-            issue.support_engineer_comments = form.support_engineer_comments.data
+            issue.customer_name = new_issue['customer_name']
+            issue.company = new_issue['company']
+            issue.source = new_issue['source']
+            issue.email = new_issue['e_mail']
+            issue.phone = new_issue['phone_number']
+            issue.issue_report_date = new_issue['issue_report_date']
+            issue.issue_description = new_issue['issue_description']
+            issue.domain = new_issue['domain']
+            issue.priority = new_issue['priority']
+            issue.support_engineer = new_issue['support_engineer']
+            issue.issue_fix_date = new_issue['issue_fixed_date']
+            issue.status = new_issue['status']
+            issue.support_engineer_comments = new_issue['support_engineer_comments']
             db.session.add(issue)
             db.session.commit()
-            return redirect('/')
-        else:
-            print(form.errors)
-            flash(form.errors)
-            return redirect(url_for('dashboard.add_issue'))
+            resp = jsonify(success=True)
+            return resp
+
+    def put(self, issue_id):
+        if request.method == "PUT" and issue_id:
+            updated_issue = request.get_json()
+
+            try:
+                issue = Issues.query.get(issue_id)
+                issue.customer_name = updated_issue['customer_name']
+                issue.company = updated_issue['company']
+                issue.source = updated_issue['source']
+                issue.email = updated_issue['e_mail']
+                issue.phone = updated_issue['phone_number']
+                issue.issue_report_date = updated_issue['issue_report_date']
+                issue.issue_description = updated_issue['issue_description']
+                issue.domain = updated_issue['domain']
+                issue.priority = updated_issue['priority']
+                issue.support_engineer = updated_issue['support_engineer']
+                issue.issue_fix_date = updated_issue['issue_fixed_date']
+                issue.status = updated_issue['status']
+                issue.support_engineer_comments = updated_issue['support_engineer_comments']
+                db.session.add(issue)
+                db.session.commit()
+                resp = jsonify(success=True)
+                return resp
+            except Exception as e:
+                print(e)
+                flash(e)
+                resp = jsonify(success=False)
+                return resp
+
+    def delete(self, issue_id):
+        if request.method == "DELETE" and issue_id:
+
+            try:
+                issue = Issues.query.get(issue_id)
+                db.session.delete(issue)
+                db.session.commit()
+                resp = jsonify(success=True)
+                return resp
+            except Exception as e:
+                print(e)
+                flash(e)
+                resp = jsonify(success=False)
+                return resp
 
 
 dashboard.add_url_rule('/', view_func=Main.as_view('main'))
-dashboard.add_url_rule('/<int:issue_id>', view_func=Main.as_view('vis'))
-
-
-class Resolved(MethodView):
-    # decorators = [login_required]
-
-    def get(self):
-        response = Issues.query.filter(Issues.status == 'Fixed')
-        issue_json_data = issues_schema.dump(response)
-        return jsonify(issues=issue_json_data)
-
-
-dashboard.add_url_rule('/resolved', view_func=Resolved.as_view('resolved'))
-
-
-class Unresolved(MethodView):
-    # decorators = [login_required]
-
-    def get(self):
-        response = Issues.query.filter(Issues.status == 'Working')
-        issue_json_data = issues_schema.dump(response)
-        return jsonify(issues=issue_json_data)
-
-
-dashboard.add_url_rule('/unresolved', view_func=Unresolved.as_view('unresolved'))
+dashboard.add_url_rule('/<int:issue_id>', view_func=Main.as_view('issue'))
+dashboard.add_url_rule('/add-issue', view_func=Main.as_view('add_issue'))
+dashboard.add_url_rule('/edit/<int:issue_id>', view_func=Main.as_view('edit_issue'))
+dashboard.add_url_rule('/delete/<int:issue_id>', view_func=Main.as_view('delete_issue'))
 
 
 class Search(MethodView):
@@ -94,75 +110,3 @@ class Search(MethodView):
 
 
 dashboard.add_url_rule('/search', view_func=Search.as_view('search'))
-
-
-class Modify(MethodView):
-    decorators = [login_required]
-
-    def post(self, issue_id):
-        form = IssueForm(request.form)
-
-        if form.validate():
-            try:
-                issue = Issues.query.get(issue_id)
-                issue.customer_name = form.customer_name.data
-                issue.company = form.company.data
-                issue.source = form.source.data
-                issue.email = form.e_mail.data
-                issue.phone = form.phone_number.data
-                issue.issue_report_date = form.issue_report_date.data
-                issue.issue_description = form.issue_description.data
-                issue.domain = form.domain.data
-                issue.priority = form.priority.data
-                issue.support_engineer = form.support_engineer.data
-                issue.issue_fix_date = form.issue_fixed_date.data
-                issue.status = form.status.data
-                issue.support_engineer_comments = form.support_engineer_comments.data
-                db.session.add(issue)
-                db.session.commit()
-                return redirect('/')
-            except Exception as e:
-                print(e)
-                flash(e)
-                return redirect(url_for('issues.edit_issue', issue_id=issue_id))
-
-        else:
-            print(form.errors)
-            flash(form.errors)
-            return redirect(url_for('issues.edit_issue', issue_id=issue_id))
-
-
-issues.add_url_rule('/modify/<int:issue_id>', view_func=Modify.as_view('modify'))
-
-
-class Delete(MethodView):
-    decorators = [login_required]
-
-    def post(self, issue_id):
-        try:
-            issue = Issues.query.get(issue_id)
-            db.session.delete(issue)
-            db.session.commit()
-            return redirect('/')
-        except Exception as e:
-            print(e)
-            flash(e)
-            return redirect(url_for('issues.edit_issue', issue_id=issue_id))
-
-
-issues.add_url_rule('/delete/<int:issue_id>', view_func=Delete.as_view('delete'))
-
-
-class IssueOperation(MethodView):
-    decorators = [login_required]
-
-    def get(self, issue_id=None):
-        if issue_id:
-            issue_json_data = Issues.query.get(issue_id).as_dict()
-            form = IssueForm(formdata=request.form, obj=issue_json_data)
-            return render_template('add-edit/edit_issue.html', issues=issue_json_data, form=form)
-        return render_template('add-edit/add_issue.html')
-
-
-dashboard.add_url_rule('/add-issue', view_func=IssueOperation.as_view('add_issue'))
-issues.add_url_rule('/edit-issue/<int:issue_id>', view_func=IssueOperation.as_view('edit_issue'))

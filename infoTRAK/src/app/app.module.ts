@@ -9,12 +9,20 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { NavbarComponent } from './navbar/navbar.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { AddIssueComponent } from './add-issue/add-issue.component';
+import { ModifyIssueComponent } from './modify-issue/modify-issue.component';
+
+import { FilterIssuesPipe } from './pipes/filter-issues.pipe';
+
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
-    DashboardComponent
+    DashboardComponent,
+    AddIssueComponent,
+    ModifyIssueComponent,
+    FilterIssuesPipe
   ],
   imports: [
     BrowserModule,

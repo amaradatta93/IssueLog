@@ -37,8 +37,6 @@ def create_app(test_config=None):
 
     from . import views
     app.register_blueprint(views.dashboard)
-    app.register_blueprint(views.issues)
     app.add_url_rule('/', endpoint='dashboard')
-    app.add_url_rule('/issues', endpoint='issues')
 
     return app

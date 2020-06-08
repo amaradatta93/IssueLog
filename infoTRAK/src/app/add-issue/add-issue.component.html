@@ -1,0 +1,154 @@
+<div class="container">
+    <div class="row justify-content-center align-items-center">
+        <div class="col-md-12 btn-row mb-3">
+            <button class="btn btn-lg btn-secondary" [routerLink]="['/']"><i class="fa fa-home"></i> Home</button>
+        </div>
+    </div>
+    <div class="row mt-2 justify-content-center align-items-center">
+        <div class="col-md-12">
+
+            <form enctype="multipart/form-data" [formGroup]="addIssueForm" (ngSubmit)="onSubmit()" method="POST">
+                <fieldset>
+
+                    <div class="form-group row">
+                        <label for="customerName" class="col-sm-2 col-form-label">Customer Name</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="customerName" formControlName="customer_name"
+                                placeholder="Customer Name">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="company" class="col-sm-2 col-form-label">Company</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="company" formControlName="company" placeholder="Company">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <legend class="col-form-label col-sm-2 pt-0">Source</legend>
+                        <div class="col-sm-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" formControlName="source" id="phone" value="Phone">
+                                <label class="form-check-label" for="phone">
+                                    Phone
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" formControlName="source" id="email" value="E-Mail">
+                                <label class="form-check-label" for="email">
+                                    E - Mail
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-sm-2 col-form-label">E-Mail</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="inputEmail3" formControlName="e_mail"
+                                placeholder="name@example.com">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="phoneNumber" class="col-sm-2 col-form-label">Phone</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="phoneNumber" formControlName="phone_number"
+                                placeholder="1234567890">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="issueReportDate" class="col-sm-2 col-form-label">Issue Report Date</label>
+                        <div class="col-sm-6">
+                            <input type="date" class="form-control" id="issueReportDate" formControlName="issue_report_date">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="issueDescription" class="col-sm-2 col-form-label">Issue Description</label>
+                        <div class="col-sm-6">
+                            <textarea class="form-control" id="issueDescription" rows="5"
+                                formControlName="issue_description"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <legend class="col-form-label col-sm-2 pt-0">Domain</legend>
+                        <div class="col-sm-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" formControlName="domain" id="fleet" value="Fleet">
+                                <label class="form-check-label" for="fleet">
+                                    Fleet
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" formControlName="domain" id="hos" value="HOS">
+                                <label class="form-check-label" for="hos">
+                                    HOS
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="priority" class="col-sm-2 col-form-label">Priority</label>
+                        <div class="col-sm-6">
+                            <select class="form-control" id="priority" formControlName="priority">
+                                <option value="Low">Low</option>
+                                <option value="Medium">Medium</option>
+                                <option value="High">High</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="supportEngineer" class="col-sm-2 col-form-label">Support Engineer</label>
+                        <div class="col-sm-6">
+                            <select class="form-control" id="supportEngineer" formControlName="support_engineer">
+                                <option value="Amara">Amara</option>
+                                <option value="Ravi">Ravi</option>
+                                <option value="Sridhar">Sridhar</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="issueFixedDate" class="col-sm-2 col-form-label">Expected Fix Date</label>
+                        <div class="col-sm-6">
+                            <input type="date" class="form-control" id="issueFixedDate" formControlName="issue_fixed_date">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="status" class="col-sm-2 col-form-label">Status</label>
+                        <div class="col-sm-6">
+                            <select class="form-control" id="status" formControlName="status">
+                                <option value="Working">Working</option>
+                                <option value="Fixed">Fixed</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="supportEngineerComments" class="col-sm-2 col-form-label">Support Engineer
+                            Comments</label>
+                        <div class="col-sm-6">
+                            <textarea class="form-control" id="supportEngineerComments" rows="2"
+                                formControlName="support_engineer_comments"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group row justify-content-center align-items-center">
+                        <div class="col-sm-3">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+
+        </div>
+    </div>
+</div>
+

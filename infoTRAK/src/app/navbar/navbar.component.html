@@ -1,32 +1,38 @@
 <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark" id="navbarHeader">
-    <a class="navbar-brand" routerLink="/dashboard">
+    <a class="navbar-brand" (click) = "selected($event, null)" [routerLink]="['/']">
         <h3><i>info</i>TRAK</h3>
     </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse"
-        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-        aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="#">
-                    <button class="btn btn-outline-success" type="button">
-                        <i class="fas fa-check-circle"></i> Resolved
-                    </button>
+            <li class="nav-item mt-auto mb-auto dropdown"><a class="nav-link dropdown-toggle" href="#"
+                    id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <b class="filter">Filters <i class="fas fa-filter"></i></b>
                 </a>
+                <div class="dropdown-menu" id="mySelect" aria-labelledby="navbarDropdownMenuLink" >
+                    <option class="dropdown-item" style="color: #51a847;" (click) = "selected($event, {field: 'status', fieldValue: 'Fixed'})">
+                        Resolved
+                    </option>
+                    <option class="dropdown-item" style="color: #ff0000;" (click) = "selected($event, {field: 'status', fieldValue: 'Working'})">
+                        Unresolved
+                    </option>
+                    <div class="dropdown-divider"></div>
+                    <option class="dropdown-item" style="color: #297cff;" (click) = "selected($event, {field: 'domain', fieldValue: 'Fleet'})">
+                        Fleet
+                    </option>
+                    <option class="dropdown-item" style="color: #297cff;" (click) = "selected($event, {field: 'domain', fieldValue: 'HOS'})">
+                        HOS
+                    </option>
+                </div>
             </li>
+
             <li class="nav-item">
-                <a class="nav-link" href="#">
-                    <button class="btn btn-outline-danger" type="button">
-                        <i class="fas fa-times-circle"></i> Unresolved
-                    </button>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" [routerLink]="['/add-issue']">
                     <button class="btn btn-outline-info" type="button">
                         <i class="fas fa-plus-square"></i> Add Issue
                     </button>
@@ -35,17 +41,17 @@
         </ul>
 
         <form for="search-box" class="form-inline my-2 my-lg-0" action="#">
-            <input #searchBox [(ngModel)] = "searchValue" class="form-control mr-sm-2"
-                type="search" placeholder="Search Issue Keyword" aria-label="Search" name="searchbox">
+            <input #searchBox [(ngModel)]="searchValue" class="form-control mr-sm-2" type="search"
+                placeholder="Search Issue Keyword" aria-label="Search" name="searchbox">
 
-            <button class="btn btn-outline-success my-2 my-sm-0"
-                type="button" [routerLink]="['/dashboard']" [queryParams]="{search_params: searchValue}">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="button" [routerLink]="['/']"
+                [queryParams]="{search_params: searchValue}" (click) = "selected($event, null)">
                 Search
             </button>
-          </form>
+        </form>
 
         <form class="form-inline my-2 my-lg-0" action="#">
-            <button class="btn btn-outline-warning ml-sm-2 my-2 my-sm-0" type="submit">
+            <button class="btn btn-outline-danger ml-sm-2 my-2 my-sm-0" type="submit">
                 <i class="fas fa-power-off"></i> Logout
             </button>
         </form>

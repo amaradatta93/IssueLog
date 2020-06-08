@@ -10,15 +10,15 @@ import { Issue } from '../models/issue';
 })
 export class DashboardService {
 
-  constructor(private http: HttpClient) {}
+  constructor(private httpClient: HttpClient) {}
 
   getIssues(): Observable<Issue[]> {
     let dashboardUrl = 'http://127.0.0.1:5000/';
-    return this.http.get<Issue[]>(dashboardUrl);
+    return this.httpClient.get<Issue[]>(dashboardUrl);
   }
 
   getSearchedIssues(search_param: string): Observable<Issue[]> {
     let searchIssueUrl = `http://127.0.0.1:5000/search?search_param=${search_param}`;
-    return this.http.get<Issue[]>(searchIssueUrl);
+    return this.httpClient.get<Issue[]>(searchIssueUrl);
   }
 }
