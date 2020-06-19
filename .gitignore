@@ -360,4 +360,7 @@ pip-selfcheck.json
 # Auth file
 auth.sh
 
+# Flask Session directory
+flask_session/*
+
 # End of https://www.gitignore.io/api/venv,flask,pycharm,virtualenv,pycharm+iml,pycharm+all

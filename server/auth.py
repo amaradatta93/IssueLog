@@ -1,47 +1,77 @@
-import functools
-
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, session, url_for
+    Blueprint, request, session, jsonify
 )
+from flask_cors import CORS
+from flask_jwt_extended import create_access_token
+
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from server.db import User, db
+from server.db import db, User, Role, UserRoles, UserSchema
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
+issue_schema = UserSchema()
+CORS(bp)
 
 
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
+    resp = jsonify(register=False)
+
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
         user = User()
+        user_roles = UserRoles()
+        user_input = request.get_json()
+
+        username = user_input['username']
+        password = user_input['password']
+        user_email = user_input['email']
+
         error = None
 
         if not username:
             error = 'Username is required.'
         elif not password:
             error = 'Password is required.'
-        elif user.query.get(username) is not None:
+        elif not user_email:
+            error = 'E-Mail is required.'
+        elif User.query.filter_by(username=username).first() is not None:
             error = 'User {} is already registered.'.format(username)
 
         if error is None:
+
             user.username = username
             user.password = generate_password_hash(password)
+            user.user_email = user_email
             db.session.add(user)
             db.session.commit()
-            return redirect(url_for('auth.login'))
 
-        flash(error)
+            user_roles.user_id = user.id
 
-    return render_template('auth/register.html')
+            if user_email == 'support@info-spectrum.com':
+                user_roles.role_id = 1
+            else:
+                user_roles.role_id = 2
+
+            db.session.add(user_roles)
+            db.session.add(user)
+            db.session.commit()
+            resp = jsonify(register=True)
+            return resp
+
+        resp = jsonify(error=error)
+    return resp
 
 
 @bp.route('/login', methods=('GET', 'POST'))
 def login():
+    resp = jsonify(login=False)
+
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
+        user_input = request.get_json()
+
+        username = user_input['username']
+        password = user_input['password']
+
         error = None
         try:
             user = User.query.filter_by(username=username).first_or_404()
@@ -56,37 +86,22 @@ def login():
 
         if error is None:
             session.clear()
-            session['user_id'] = user.id
-            return redirect(url_for('dashboard.main'))
+            response = User.query.get(user.id)
+            user_json_data = issue_schema.dump(response)
 
-        flash(error)
+            user_role = UserRoles.query.filter_by(user_id=user.id).first()
+            role = Role.query.get(user_role.role_id)
+            user_json_data["role"] = role.name
+            token = create_access_token(identity=user_json_data)
 
-    return render_template('auth/login.html')
+            return jsonify(token=token), 200
 
-
-@bp.before_app_request
-def load_logged_in_user():
-    user_id = session.get('user_id')
-
-    if user_id is None:
-        g.user = None
-    else:
-        g.user = User.query.get(user_id)
+        resp = jsonify(error=error)
+    return resp
 
 
 @bp.route('/logout')
 def logout():
     session.clear()
-    return redirect(url_for('auth.login'))
-
-
-def login_required(view):
-    @functools.wraps(view)
-    def wrapped_view(**kwargs):
-        if g.user is None:
-            return redirect(url_for('auth.login'))
-
-        return view(**kwargs)
-
-    return wrapped_view
-
+    resp = jsonify(login=False)
+    return resp

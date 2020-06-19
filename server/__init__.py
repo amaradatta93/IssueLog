@@ -2,6 +2,8 @@ import os
 
 from flask import Flask
 from flask_cors import CORS
+from flask_jwt_extended import JWTManager
+from flask_migrate import Migrate
 
 from server.config import username, password, host, db_name
 from server.db import db
@@ -11,6 +13,7 @@ def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
     CORS(app, resources={r"/*": {"origins": "localhost:4200"}})
+    JWTManager(app)
     app.config.from_mapping(
         SECRET_KEY='dev',
         SQLALCHEMY_TRACK_MODIFICATIONS=False
@@ -31,6 +34,7 @@ def create_app(test_config=None):
         pass
 
     db.init_app(app)
+    migrate = Migrate(app, db)
 
     from . import auth
     app.register_blueprint(auth.bp)

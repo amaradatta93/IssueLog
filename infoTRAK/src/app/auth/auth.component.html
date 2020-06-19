@@ -1,0 +1,107 @@
+<div class="bg">
+    <div *ngIf="error_message" class="row align-items-center justify-content-center">
+        <div class="col-lg-6">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ error_message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="clearMessage()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="success_message" class="row align-items-center justify-content-center">
+        <div class="col-lg-6">
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ success_message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="clearMessage()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-center h-100">
+        <div class="card">
+            <div class="card-header mb-3">
+                <h2><b><i>info</i>TRAK</b></h2>
+            </div>
+            <div *ngIf="buttonName == 'Log In'; else elseBlock">
+                <div class="card-body">
+                    <form [formGroup]="logInForm" (ngSubmit)="onLogin()">
+                        <div class="input-group form-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text username"><i class="fas fa-user"></i></span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="Username" formControlName="username">
+
+                        </div>
+                        <div class="input-group form-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                            </div>
+                            <input type="password" class="form-control" placeholder="Password"
+                                formControlName="password">
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md forgot">
+                                <a><u>Forgot Password?</u></a>
+                            </div>
+                            <div class="col-md login_button">
+                                <input type="submit" value="Login" class="btn login_btn">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer">
+                    <div class="d-flex justify-content-center">
+                        <a (click)="toggle()">
+                            <h3>Register</h3>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <ng-template #elseBlock>
+                <div class="card-body mb-3">
+                    <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+                        <div class="input-group form-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text username"><i class="fas fa-user"></i></span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="Username" formControlName="username">
+                        </div>
+
+                        <div class="input-group form-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                            </div>
+                            <input type="password" class="form-control" placeholder="Password"
+                                formControlName="password">
+                        </div>
+
+                        <div class="input-group form-group mb-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                            </div>
+                            <input type="email" class="form-control" placeholder="E-Mail Id" formControlName="email">
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md login_button">
+                                <input type="submit" value="Register" class="btn login_btn">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer">
+                    <div class="d-flex justify-content-center">
+                        <a (click)="toggle()">
+                            <h3>Log In</h3>
+                        </a>
+                    </div>
+                </div>
+            </ng-template>
+        </div>
+    </div>
+</div>

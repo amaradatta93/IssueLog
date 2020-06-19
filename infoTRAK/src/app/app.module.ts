@@ -3,9 +3,10 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
+import { AuthComponent } from './auth/auth.component';
 import { AppRoutingModule } from './app-routing.module';
 import { NavbarComponent } from './navbar/navbar.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -14,6 +15,9 @@ import { ModifyIssueComponent } from './modify-issue/modify-issue.component';
 
 import { FilterIssuesPipe } from './pipes/filter-issues.pipe';
 
+import { JwtInterceptor } from './_helpers/jwt.interceptor';
+import { ErrorInterceptor } from './_helpers/error.interceptor';
+
 
 @NgModule({
   declarations: [
@@ -21,6 +25,7 @@ import { FilterIssuesPipe } from './pipes/filter-issues.pipe';
     NavbarComponent,
     DashboardComponent,
     AddIssueComponent,
+    AuthComponent,
     ModifyIssueComponent,
     FilterIssuesPipe
   ],
@@ -32,7 +37,10 @@ import { FilterIssuesPipe } from './pipes/filter-issues.pipe';
     FormsModule,
     ReactiveFormsModule
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor , multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

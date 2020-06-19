@@ -7,6 +7,7 @@ ma = Marshmallow()
 
 class Issues(db.Model):
     __tablename__ = 'issues'
+    id = db.Column(db.Integer, primary_key=True)
     customer_name = db.Column(db.String(255), nullable=False)
     company = db.Column(db.String(255), nullable=False)
     source = db.Column(db.String(255), nullable=False)
@@ -16,14 +17,15 @@ class Issues(db.Model):
     issue_description = db.Column(db.Text, nullable=False)
     domain = db.Column(db.String(255), nullable=False)
     priority = db.Column(db.String(255), nullable=False)
-    support_engineer = db.Column(db.String(255), nullable=False)
+    assigned_to = db.Column(db.String(255), nullable=False)
     issue_fix_date = db.Column(db.String(10), nullable=False)
     status = db.Column(db.String(255), nullable=False)
     support_engineer_comments = db.Column(db.Text, nullable=False)
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
 
     def as_dict(self):
         return {
+            'id': self.id,
             'customer_name': self.customer_name,
             'company': self.company,
             'source': self.source,
@@ -36,16 +38,15 @@ class Issues(db.Model):
             'support_engineer': self.support_engineer,
             'issue_fix_date': str(self.issue_fix_date),
             'status': self.status,
-            'support_engineer_comments': self.support_engineer_comments,
-            'id': self.id
+            'support_engineer_comments': self.support_engineer_comments
         }
 
 
 class IssuesSchema(ma.Schema):
     class Meta:
         fields = (
-            'customer_name', 'company', 'source', 'email', 'phone', 'issue_report_date', 'issue_description', 'domain',
-            'priority', 'support_engineer', 'issue_fix_date', 'status', 'support_engineer_comments', 'id'
+            'id', 'customer_name', 'company', 'source', 'email', 'phone', 'issue_report_date', 'issue_description',
+            'domain', 'priority', 'support_engineer', 'issue_fix_date', 'status', 'support_engineer_comments'
         )
 
 
@@ -54,3 +55,24 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
     username = db.Column(db.String(255), nullable=False)
     password = db.Column(db.String(255), nullable=False)
+    user_email = db.Column(db.String(255), nullable=False, unique=True)
+
+
+class UserSchema(ma.Schema):
+    class Meta:
+        fields = (
+            'id', 'username', 'user_email'
+        )
+
+
+class Role(db.Model):
+    __tablename__ = 'roles'
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(50), unique=True)
+
+
+class UserRoles(db.Model):
+    __tablename__ = 'user_roles'
+    id = db.Column(db.Integer(), primary_key=True)
+    user_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'))
+    role_id = db.Column(db.Integer(), db.ForeignKey('roles.id', ondelete='CASCADE'))

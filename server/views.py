@@ -1,6 +1,7 @@
 from flask import request, Blueprint, flash, jsonify
 from flask.views import MethodView
 from flask_cors import CORS
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from server.db import Issues, IssuesSchema, db
 
@@ -12,23 +13,34 @@ issues_schema = IssuesSchema(many=True)
 
 
 class Main(MethodView):
-    # decorators = [login_required]
+    decorators = [jwt_required]
 
     def get(self, issue_id=None):
+
         if request.method == "GET":
+
+            identity = get_jwt_identity()
 
             if issue_id:
                 response = Issues.query.get(issue_id)
                 issue_json_data = issue_schema.dump(response)
                 return jsonify(issue=issue_json_data)
-            response = Issues.query.all()
-            issue_json_data = issues_schema.dump(response)
-            return jsonify(issues=issue_json_data)
+
+            if identity['role'] == 'admin':
+                response = Issues.query.all()
+                issue_json_data = issues_schema.dump(response)
+                return jsonify(issues=issue_json_data)
+            else:
+                response = Issues.query.filter_by(user_id=identity['id']).all()
+                issue_json_data = issues_schema.dump(response)
+                return jsonify(issues=issue_json_data)
 
     def post(self):
         if request.method == "POST":
+            identity = get_jwt_identity()
             new_issue = request.get_json()
             issue = Issues()
+
             issue.customer_name = new_issue['customer_name']
             issue.company = new_issue['company']
             issue.source = new_issue['source']
@@ -38,10 +50,11 @@ class Main(MethodView):
             issue.issue_description = new_issue['issue_description']
             issue.domain = new_issue['domain']
             issue.priority = new_issue['priority']
-            issue.support_engineer = new_issue['support_engineer']
+            issue.assigned_to = new_issue['support_engineer']
             issue.issue_fix_date = new_issue['issue_fixed_date']
             issue.status = new_issue['status']
             issue.support_engineer_comments = new_issue['support_engineer_comments']
+            issue.user_id = identity['id']
             db.session.add(issue)
             db.session.commit()
             resp = jsonify(success=True)
@@ -49,6 +62,7 @@ class Main(MethodView):
 
     def put(self, issue_id):
         if request.method == "PUT" and issue_id:
+            identity = get_jwt_identity()
             updated_issue = request.get_json()
 
             try:
@@ -62,10 +76,11 @@ class Main(MethodView):
                 issue.issue_description = updated_issue['issue_description']
                 issue.domain = updated_issue['domain']
                 issue.priority = updated_issue['priority']
-                issue.support_engineer = updated_issue['support_engineer']
+                issue.assigned_to = updated_issue['support_engineer']
                 issue.issue_fix_date = updated_issue['issue_fixed_date']
                 issue.status = updated_issue['status']
                 issue.support_engineer_comments = updated_issue['support_engineer_comments']
+                issue.user_id = identity['id']
                 db.session.add(issue)
                 db.session.commit()
                 resp = jsonify(success=True)
@@ -77,7 +92,11 @@ class Main(MethodView):
                 return resp
 
     def delete(self, issue_id):
-        if request.method == "DELETE" and issue_id:
+
+        identity = get_jwt_identity()
+        resp = jsonify(error='Not authorized')
+
+        if request.method == "DELETE" and issue_id and identity['role'] == 'admin':
 
             try:
                 issue = Issues.query.get(issue_id)
@@ -90,6 +109,7 @@ class Main(MethodView):
                 flash(e)
                 resp = jsonify(success=False)
                 return resp
+        return resp
 
 
 dashboard.add_url_rule('/', view_func=Main.as_view('main'))
@@ -100,7 +120,7 @@ dashboard.add_url_rule('/delete/<int:issue_id>', view_func=Main.as_view('delete_
 
 
 class Search(MethodView):
-    # decorators = [login_required]
+    decorators = [jwt_required]
 
     def get(self):
         search_param = request.args.get('search_param')
