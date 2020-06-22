@@ -123,8 +123,17 @@ class Search(MethodView):
     decorators = [jwt_required]
 
     def get(self):
+        response = None
+        identity = get_jwt_identity()
         search_param = request.args.get('search_param')
-        response = Issues.query.filter(Issues.issue_description.contains(search_param))
+
+        if identity['role'] == 'admin':
+            response = Issues.query.filter(Issues.issue_description.contains(search_param))
+
+        elif identity['role'] == 'user':
+            response = Issues.query.filter((Issues.issue_description.contains(search_param))
+                                       & (Issues.user_id == identity['id']))
+
         issue_json_data = issues_schema.dump(response)
         return jsonify(issues=issue_json_data)
 
