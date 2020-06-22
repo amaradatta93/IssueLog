@@ -19,7 +19,7 @@
                     <th>Issue Description</th>
                     <th>Priority</th>
                     <th>Domain</th>
-                    <th>Support Engineer</th>
+                    <th>Assigned To</th>
                     <th>Status</th>
                     <th colspan="2">Action</th>
                 </tr>
@@ -33,49 +33,63 @@
                     <td>{{issue.issue_description}}</td>
                     <td>{{issue.priority}}</td>
                     <td>{{issue.domain}}</td>
-                    <td>{{issue.support_engineer}}</td>
+                    <td>{{issue.assigned_to}}</td>
                     <td>{{issue.status}}</td>
                     <td>
-                        <ul class="list-group list-group-horizontal">
-                            <li class="list-group-item-sm"><a class="nav-link">
-                                <button type="button" class="btn btn-success" (click)="openScrollableContent(longContent)">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                            </a></li>
-                            <li class="list-group-item-sm"><a class="nav-link" routerLink="/modify-issue/{{issue.id}}">
-                                <button type="button" class="btn btn-warning"><i class="fas fa-edit"></i></button>
-                            </a></li>
-                        </ul>
+                        <div class="row justify-content-center">
+                            <ul class="list-group list-group-horizontal">
+                                <li class="list-group-item-sm">
+                                    <a class="nav-link">
+                                        <button type="button" class="btn btn-success"
+                                            (click)="openScrollableContent(longContent, issue.id)">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </a>
+                                </li>
+                                <ng-template #longContent let-modal>
+                                    <div class="modal-header" *ngIf="selectedIssue">
+                                        <h4 class="modal-title">Ticket# {{selectedIssue.id}}</h4>
+                                        <button type="button" class="close" aria-label="Close"
+                                            (click)="modal.dismiss('Cross click')">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body" *ngIf="selectedIssue">
+                                        <b>ID:</b> {{selectedIssue.id}} <br>
+                                        <b>Customer Name:</b> {{selectedIssue.customer_name}} <br>
+                                        <b>Company:</b> {{selectedIssue.company}} <br>
+                                        <b>Source:</b> {{selectedIssue.source}} <br>
+                                        <b>E - mail:</b> {{selectedIssue.email}} <br>
+                                        <b>Phone:</b> {{selectedIssue.phone}} <br>
+                                        <b>Issue Report Date:</b> {{selectedIssue.issue_report_date}} <br>
+                                        <b>Issue Description:</b> {{selectedIssue.issue_description}} <br>
+                                        <b>Domain:</b> {{selectedIssue.domain}} <br>
+                                        <b>Priority:</b> {{selectedIssue.priority}} <br>
+                                        <b>Support Engineer:</b> {{selectedIssue.assigned_to}} <br>
+                                        <span *ngIf="selectedIssue.status == 'Working'">
+                                            <b>Expected Fix Date:</b> {{selectedIssue.issue_fix_date}} <br>
+                                        </span>
+                                        <span *ngIf="selectedIssue.status == 'Fixed'">
+                                            <b>Issue Fix Date:</b> {{selectedIssue.issue_fix_date}} <br>
+                                        </span>
+                                        <b>Status:</b> {{selectedIssue.status}} <br>
+                                        <b>Support Engineer Comments:</b> {{selectedIssue.support_engineer_comments}}
+                                        <br>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            (click)="modal.close('Close click')">Close</button>
+                                    </div>
+                                </ng-template>
 
-                        <ng-template #longContent let-modal>
-                            <div class="modal-header">
-                                <h4 class="modal-title">Ticket# {{issue.id}}</h4>
-                                <button type="button" class="close" aria-label="Close"
-                                    (click)="modal.dismiss('Cross click')">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <b>ID:</b> {{issue.id}} <br>
-                                <b>Customer Name:</b> {{issue.customer_name}} <br>
-                                <b>Company:</b> {{issue.company}} <br>
-                                <b>Source:</b> {{issue.source}} <br>
-                                <b>E - mail:</b> {{issue.email}} <br>
-                                <b>Phone:</b> {{issue.phone}} <br>
-                                <b>Issue Report Date:</b> {{issue.issue_report_date}} <br>
-                                <b>Issue Description:</b> {{issue.issue_description}} <br>
-                                <b>Domain:</b> {{issue.domain}} <br>
-                                <b>Priority:</b> {{issue.priority}} <br>
-                                <b>Support Engineer:</b> {{issue.support_engineer}} <br>
-                                <b>Issue Fix Date:</b> {{issue.issue_fix_date}} <br>
-                                <b>Status:</b> {{issue.status}} <br>
-                                <b>Support Engineer Comments:</b> {{issue.support_engineer_comments}} <br>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary"
-                                    (click)="modal.close('Close click')">Close</button>
-                            </div>
-                        </ng-template>
+                                <li class="list-group-item-sm">
+                                    <a class="nav-link" routerLink="/modify-issue/{{issue.id}}">
+                                        <button type="button" class="btn btn-warning"><i class="fas fa-edit"></i>
+                                        </button>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                     </td>
                 </tr>
             </tbody>

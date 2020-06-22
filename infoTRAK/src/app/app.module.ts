@@ -17,6 +17,7 @@ import { FilterIssuesPipe } from './pipes/filter-issues.pipe';
 
 import { JwtInterceptor } from './_helpers/jwt.interceptor';
 import { ErrorInterceptor } from './_helpers/error.interceptor';
+import { PasswordChangeComponent } from './password-change/password-change.component';
 
 
 @NgModule({
@@ -27,7 +28,8 @@ import { ErrorInterceptor } from './_helpers/error.interceptor';
     AddIssueComponent,
     AuthComponent,
     ModifyIssueComponent,
-    FilterIssuesPipe
+    FilterIssuesPipe,
+    PasswordChangeComponent
   ],
   imports: [
     BrowserModule,

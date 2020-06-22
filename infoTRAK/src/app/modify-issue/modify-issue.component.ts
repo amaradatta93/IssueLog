@@ -14,6 +14,8 @@ import { ModifyIssueService } from '../services/modify-issue.service';
 export class ModifyIssueComponent implements OnInit {
   issue: Issue;
   issue_id: number;
+  error_message: any;
+  success_message: any;
   editIssueForm: FormGroup;
 
 
@@ -23,6 +25,8 @@ export class ModifyIssueComponent implements OnInit {
     private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
+    this.error_message;
+    this.success_message;
     this.activatedRoute.paramMap.subscribe((param: any) => {
       this.issue_id = param.params.id
       this.modifyIssueService.getIssue(this.issue_id)
@@ -38,7 +42,7 @@ export class ModifyIssueComponent implements OnInit {
             issue_description: [this.issue.issue_description],
             domain: [this.issue.domain],
             priority: [this.issue.priority],
-            support_engineer: [this.issue.support_engineer],
+            assigned_to: [this.issue.assigned_to],
             issue_fixed_date: [this.issue.issue_fix_date],
             status: [this.issue.status],
             support_engineer_comments: [this.issue.support_engineer_comments]
@@ -49,14 +53,15 @@ export class ModifyIssueComponent implements OnInit {
 
   }
 
-
   onSubmit() {
     this.modifyIssueService.updateIssue(this.issue_id, this.editIssueForm.value)
     .subscribe(res => {
       console.warn('Your issue has been updated');
-      console.log("Response from tasks service: ", res)
       if (res['success'] === true){
+        this.success_message = 'Issue Update Successful';
         this.router.navigateByUrl('/')
+      } else {
+        this.error_message = res['error'];
       }
     });
   }
@@ -65,12 +70,17 @@ export class ModifyIssueComponent implements OnInit {
     this.modifyIssueService.deleteIssue(this.issue_id)
     .subscribe(res => {
       console.warn('Your issue has been deleted');
-      console.log("Response from tasks service: ", res)
       if (res['success'] === true){
         this.router.navigateByUrl('/')
+      } else {
+        this.error_message = res['error'];
       }
     });
   }
 
+  clearMessage() {
+    this.error_message = null;
+    this.success_message = null;
+  }
 
 }

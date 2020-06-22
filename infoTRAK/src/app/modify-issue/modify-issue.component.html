@@ -1,4 +1,24 @@
 <div class="container">
+    <div *ngIf="error_message" class="row align-items-center justify-content-center">
+        <div class="col-lg-6">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ error_message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="clearMessage()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="success_message" class="row align-items-center justify-content-center">
+        <div class="col-lg-6">
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ success_message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="clearMessage()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
     <div class="row justify-content-center align-items-center">
         <div class="col-md-12 btn-row mb-3">
             <button class="btn btn-lg btn-secondary" [routerLink]="['/']">
@@ -112,12 +132,12 @@
                     </div>
 
                     <div class="form-group row">
-                        <label for="supportEngineer" class="col-sm-2 col-form-label">Support Engineer</label>
+                        <label for="assignedTo" class="col-sm-2 col-form-label">Assigned To</label>
                         <div class="col-sm-6">
-                            <select class="form-control" id="supportEngineer" formControlName="support_engineer">
-                                <option value="Amara">Amara</option>
-                                <option value="Ravi">Ravi</option>
-                                <option value="Sridhar">Sridhar</option>
+                            <select class="form-control" id="assignedTo" formControlName="assigned_to">
+                                <option value="Support">Support</option>
+                                <option value="Billing">Billing</option>
+                                <option value="Development">Development</option>
                             </select>
                         </div>
                     </div>

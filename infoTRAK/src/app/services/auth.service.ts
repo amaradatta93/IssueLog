@@ -56,4 +56,9 @@ export class AuthService {
     ));
   }
 
+  passwordChange(password_details: any): Observable<any> {
+    let passwordChangeUrl = `http://127.0.0.1:5000/auth/password-change`;
+    return this.httpClient.post(passwordChangeUrl, password_details);
+  }
+
 }

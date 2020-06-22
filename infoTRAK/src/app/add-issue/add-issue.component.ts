@@ -10,6 +10,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./add-issue.component.css']
 })
 export class AddIssueComponent implements OnInit {
+  error_message: any;
+  success_message: any;
   addIssueForm: FormGroup;
 
   constructor(private formBuilder: FormBuilder,
@@ -17,6 +19,8 @@ export class AddIssueComponent implements OnInit {
     private router: Router) { }
 
   ngOnInit(): void {
+    this.error_message = null;
+    this.success_message = null;
     this.addIssueForm = this.formBuilder.group({
       customer_name: [''],
       company: [''],
@@ -27,7 +31,7 @@ export class AddIssueComponent implements OnInit {
       issue_description: [''],
       domain: ['Fleet'],
       priority: ['Low'],
-      support_engineer: ['Ravi'],
+      assigned_to: ['Support'],
       issue_fixed_date: [''],
       status: ['Working'],
       support_engineer_comments: [''],
@@ -36,13 +40,13 @@ export class AddIssueComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.addIssueForm.value);
-
     this.addIssueService.addIssues(this.addIssueForm.value).subscribe(res => {
       console.warn('Your issue has been recorded');
-      console.log("Response from tasks service: ", res)
       if (res['success'] === true){
+        this.success_message = "Issue Added Successfully";
         this.router.navigateByUrl('/')
+      } else {
+        this.error_message = res['error'];
       }
     });
   }
@@ -50,6 +54,11 @@ export class AddIssueComponent implements OnInit {
   todayDate() {
     const currentDate = new Date();
     return currentDate.toISOString().substring(0,10);
+  }
+
+  clearMessage() {
+    this.error_message = null;
+    this.success_message = null;
   }
 
 }

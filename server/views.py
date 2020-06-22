@@ -1,14 +1,14 @@
-from flask import request, Blueprint, flash, jsonify
+from flask import request, Blueprint, jsonify
 from flask.views import MethodView
 from flask_cors import CORS
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
-from server.db import Issues, IssuesSchema, db
+from server.db import db, Issues, IssueSchema, IssuesSchema
 
 dashboard = Blueprint('dashboard', __name__)
 CORS(dashboard)
 
-issue_schema = IssuesSchema()
+issue_schema = IssueSchema()
 issues_schema = IssuesSchema(many=True)
 
 
@@ -18,7 +18,6 @@ class Main(MethodView):
     def get(self, issue_id=None):
 
         if request.method == "GET":
-
             identity = get_jwt_identity()
 
             if issue_id:
@@ -36,31 +35,37 @@ class Main(MethodView):
                 return jsonify(issues=issue_json_data)
 
     def post(self):
+
         if request.method == "POST":
             identity = get_jwt_identity()
             new_issue = request.get_json()
             issue = Issues()
 
-            issue.customer_name = new_issue['customer_name']
-            issue.company = new_issue['company']
-            issue.source = new_issue['source']
-            issue.email = new_issue['e_mail']
-            issue.phone = new_issue['phone_number']
-            issue.issue_report_date = new_issue['issue_report_date']
-            issue.issue_description = new_issue['issue_description']
-            issue.domain = new_issue['domain']
-            issue.priority = new_issue['priority']
-            issue.assigned_to = new_issue['support_engineer']
-            issue.issue_fix_date = new_issue['issue_fixed_date']
-            issue.status = new_issue['status']
-            issue.support_engineer_comments = new_issue['support_engineer_comments']
-            issue.user_id = identity['id']
-            db.session.add(issue)
-            db.session.commit()
-            resp = jsonify(success=True)
-            return resp
+            try:
+                issue.customer_name = new_issue['customer_name']
+                issue.company = new_issue['company']
+                issue.source = new_issue['source']
+                issue.email = new_issue['e_mail']
+                issue.phone = new_issue['phone_number']
+                issue.issue_report_date = new_issue['issue_report_date']
+                issue.issue_description = new_issue['issue_description']
+                issue.domain = new_issue['domain']
+                issue.priority = new_issue['priority']
+                issue.assigned_to = new_issue['assigned_to']
+                issue.issue_fix_date = new_issue['issue_fixed_date']
+                issue.status = new_issue['status']
+                issue.support_engineer_comments = new_issue['support_engineer_comments']
+                issue.user_id = identity['id']
+                db.session.add(issue)
+                db.session.commit()
+                resp = jsonify(success=True)
+                return resp
+            except Exception as e:
+                resp = jsonify(error=e)
+                return resp
 
     def put(self, issue_id):
+
         if request.method == "PUT" and issue_id:
             identity = get_jwt_identity()
             updated_issue = request.get_json()
@@ -76,7 +81,7 @@ class Main(MethodView):
                 issue.issue_description = updated_issue['issue_description']
                 issue.domain = updated_issue['domain']
                 issue.priority = updated_issue['priority']
-                issue.assigned_to = updated_issue['support_engineer']
+                issue.assigned_to = updated_issue['assigned_to']
                 issue.issue_fix_date = updated_issue['issue_fixed_date']
                 issue.status = updated_issue['status']
                 issue.support_engineer_comments = updated_issue['support_engineer_comments']
@@ -86,18 +91,14 @@ class Main(MethodView):
                 resp = jsonify(success=True)
                 return resp
             except Exception as e:
-                print(e)
-                flash(e)
-                resp = jsonify(success=False)
+                resp = jsonify(error=e)
                 return resp
 
     def delete(self, issue_id):
-
         identity = get_jwt_identity()
-        resp = jsonify(error='Not authorized')
+        resp = jsonify(error='Not authorized. Please contact support team to delete')
 
         if request.method == "DELETE" and issue_id and identity['role'] == 'admin':
-
             try:
                 issue = Issues.query.get(issue_id)
                 db.session.delete(issue)
@@ -105,10 +106,9 @@ class Main(MethodView):
                 resp = jsonify(success=True)
                 return resp
             except Exception as e:
-                print(e)
-                flash(e)
-                resp = jsonify(success=False)
+                resp = jsonify(error=e)
                 return resp
+
         return resp
 
 
@@ -132,7 +132,7 @@ class Search(MethodView):
 
         elif identity['role'] == 'user':
             response = Issues.query.filter((Issues.issue_description.contains(search_param))
-                                       & (Issues.user_id == identity['id']))
+                                           & (Issues.user_id == identity['id']))
 
         issue_json_data = issues_schema.dump(response)
         return jsonify(issues=issue_json_data)

@@ -27,11 +27,14 @@ export class NavbarComponent implements OnInit {
     this.authService.logOutUser()
     .subscribe(res => {
       console.warn('Logout successful');
-      console.log("Response from tasks service: ", res)
       if (res['login'] === false){
-        this.router.navigateByUrl('/auth')
+        this.router.navigateByUrl('/auth');
       }
     });
+  }
+
+  passwordChange() {
+    this.router.navigateByUrl('/settings/password-change');
   }
 
 }

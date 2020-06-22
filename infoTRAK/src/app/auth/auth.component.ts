@@ -1,34 +1,37 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+
+import { FormValidator } from '../_helpers/validator';
 
 @Component({
   selector: 'app-auth',
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.css']
 })
-export class AuthComponent implements OnInit {
+export class AuthComponent extends FormValidator implements OnInit {
   show: boolean = false;
   error_message: any;
   success_message: any;
   buttonName: any = 'Log In';
 
   logInForm = this.formBuilder.group({
-    username: [''],
-    password: ['']
+    username: ['', Validators.required],
+    password: ['', Validators.required]
   });
 
 
   registerForm = this.formBuilder.group({
-    username: [''],
-    password: [''],
-    email: ['']
+    username: ['', Validators.required],
+    password: ['', Validators.required],
+    email: ['', Validators.required]
   });
 
   constructor(private authService: AuthService,
     private formBuilder: FormBuilder,
     private router: Router) {
+    super();
     if (this.authService.currentUserValue) {
       this.router.navigate(['/']);
     }
@@ -50,25 +53,26 @@ export class AuthComponent implements OnInit {
   }
 
   onLogin() {
+    this.error_message = null;
+    this.success_message = null;
     this.authService.logInUser(this.logInForm.value)
       .subscribe(res => {
         console.warn('Login successful');
-        console.log("Response from tasks service: ", res)
         if (this.authService.currentUserValue) {
           this.router.navigateByUrl('/');
         } else {
           this.error_message = res['error'];
-          console.log(this.error_message)
           this.router.navigateByUrl('/auth');
         }
       });
   }
 
   onRegister() {
+    this.error_message = null;
+    this.success_message = null;
     this.authService.registerUser(this.registerForm.value)
       .subscribe(res => {
         console.warn('Registration successful');
-        console.log("Response from tasks service: ", res)
         if (res['register'] === true) {
           this.router.navigateByUrl('/auth');
           this.success_message = 'Successfully registered';

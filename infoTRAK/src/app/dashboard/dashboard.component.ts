@@ -2,7 +2,7 @@ import { Component, OnInit, Input, OnChanges } from '@angular/core';
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { Issue } from '../models/issue';
+import { Issue, DashboardIssues } from '../models/issue';
 import { DashboardService } from '../services/dashboard.service';
 import { ActivatedRoute } from '@angular/router';
 
@@ -12,9 +12,10 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit, OnChanges {
-  issues: Issue[];
-  search_params: string;
+  issues: DashboardIssues[];
   filterValue = null;
+  selectedIssue: Issue;
+  search_params: string;
 
   onChangeStatus(value: any) {
     this.filterValue = value;
@@ -26,7 +27,6 @@ export class DashboardComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.getIssues();
-
   }
 
   ngOnChanges() {
@@ -46,8 +46,10 @@ export class DashboardComponent implements OnInit, OnChanges {
     });
   }
 
-  openScrollableContent(longContent) {
+  openScrollableContent(longContent, issue_id) {
     this.modalService.open(longContent, { scrollable: true });
+    this.dashboardService.getSelectedIssue(issue_id)
+    .subscribe((selectedIssue: any) => this.selectedIssue = selectedIssue.issue);
   }
 
 }

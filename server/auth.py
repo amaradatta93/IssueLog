@@ -2,7 +2,7 @@ from flask import (
     Blueprint, request, session, jsonify
 )
 from flask_cors import CORS
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -97,6 +97,41 @@ def login():
             return jsonify(token=token), 200
 
         resp = jsonify(error=error)
+    return resp
+
+
+@bp.route('/password-change', methods=('GET', 'POST'))
+@jwt_required
+def password_change():
+    resp = jsonify(password_change=False)
+
+    if request.method == 'POST':
+        error = None
+
+        identity = get_jwt_identity()
+        user_input = request.get_json()
+
+        username = identity['username']
+        old_password = user_input['old_password']
+        new_password = user_input['new_password']
+
+        user = User.query.filter_by(username=username).first()
+
+        if not check_password_hash(user.password, old_password):
+            error = 'Incorrect Old Password'
+        elif not new_password:
+            error = 'Password is required.'
+
+        if error is None:
+            user.password = generate_password_hash(new_password)
+            db.session.add(user)
+            db.session.commit()
+
+            resp = jsonify(password_change=True)
+            return resp
+
+        resp = jsonify(error=error)
+
     return resp
 
 

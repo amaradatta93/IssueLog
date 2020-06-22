@@ -11,10 +11,10 @@
 
         <ul class="navbar-nav mr-auto">
             <li class="nav-item mt-auto mb-auto dropdown"><a class="nav-link dropdown-toggle" href="#"
-                    id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    id="filters" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <b class="filter">Filters <i class="fas fa-filter"></i></b>
                 </a>
-                <div class="dropdown-menu" id="mySelect" aria-labelledby="navbarDropdownMenuLink" >
+                <div class="dropdown-menu" id="mySelect" aria-labelledby="filters" >
                     <option class="dropdown-item" style="color: #51a847;" (click) = "selected($event, {field: 'status', fieldValue: 'Fixed'})">
                         Resolved
                     </option>
@@ -51,9 +51,27 @@
         </form>
 
         <form class="form-inline my-2 my-lg-0" action="#">
-            <button class="btn btn-outline-danger ml-sm-2 my-2 my-sm-0" type="submit" (click)="logout()">
-                <i class="fas fa-power-off"></i> Logout
-            </button>
+            <ul class="navbar-nav ml-sm-2 my-2 my-sm-0">
+                <li class="nav-item mt-auto mb-auto dropdown">
+
+                    <div class="btn-group dropleft">
+                        <button type="button" class="btn btn-outline-danger ml-sm-2 my-2 my-sm-0 dropdown-toggle" 
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <b>Settings <i class="fas fa-cog"></i></b>
+                        </button>
+
+                        <div class="dropdown-menu">
+                            <span class="dropdown-item" type="button" style="color: #1f1b1b;" (click) = "logout()">
+                                <i class="fas fa-power-off" style="color: #1f1b1b;"></i> Logout
+                            </span>
+                            <span class="dropdown-item" type="button" style="color: #1f1b1b;" (click) = "passwordChange()">
+                                Password Change
+                            </span>
+                        </div>
+
+                    </div>
+                </li>
+            </ul>
         </form>
 
     </div>

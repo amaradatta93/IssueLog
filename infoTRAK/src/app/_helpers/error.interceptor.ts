@@ -16,8 +16,13 @@ export class ErrorInterceptor implements HttpInterceptor {
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(request).pipe(catchError(err => {
             if (err.status === 401) {
-                this.authService.logOutUser();
-                this.router.navigateByUrl('/auth');
+                this.authService.logOutUser()
+                .subscribe(res => {
+                    console.warn('Forbidden Request');
+                    if (res['login'] === false){
+                      this.router.navigateByUrl('/auth')
+                    }
+                  });
             }
 
             const error = err.error.message || err.statusText;

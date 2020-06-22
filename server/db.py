@@ -42,11 +42,19 @@ class Issues(db.Model):
         }
 
 
-class IssuesSchema(ma.Schema):
+class IssueSchema(ma.Schema):
     class Meta:
         fields = (
             'id', 'customer_name', 'company', 'source', 'email', 'phone', 'issue_report_date', 'issue_description',
-            'domain', 'priority', 'support_engineer', 'issue_fix_date', 'status', 'support_engineer_comments'
+            'domain', 'priority', 'assigned_to', 'issue_fix_date', 'status', 'support_engineer_comments'
+        )
+
+
+class IssuesSchema(ma.Schema):
+    class Meta:
+        fields = (
+            'id', 'company', 'issue_report_date', 'issue_description', 'priority', 'domain',
+            'assigned_to', 'status'
         )
 
 
