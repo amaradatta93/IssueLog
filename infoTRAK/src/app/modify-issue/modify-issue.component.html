@@ -19,10 +19,9 @@
             </div>
         </div>
     </div>
-    <div class="row justify-content-center align-items-center">
-        <div class="col-md-12 btn-row mb-3">
-            <button class="btn btn-lg btn-secondary" [routerLink]="['/']">
-                <i class="fa fa-home"></i> Home</button>
+    <div class="row">
+        <div class="col-md-9">
+            <h3>Modify Issue</h3>
         </div>
     </div>
     <div class="row mt-2 justify-content-center align-items-center">
@@ -101,6 +100,24 @@
                     </div>
 
                     <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Attachment</label>
+                        <div class="col-sm-6">
+                            {{ issue.issue_file }}
+                            <button class="btn btn-outline-primary" type="button" (click)="getFile(issue.issue_file)">
+                                <b><i class="fa fa-download"></i></b>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="issueFile" class="col-sm-2 col-form-label">Replacement Attachment</label>
+                        <div class="col-sm-5">
+                            <input type="file" class="upload" id="issueFile" formControlName="issue_file"
+                                (change)="handleFileInput($event.target.files)">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
                         <legend class="col-form-label col-sm-2 pt-0">Domain</legend>
                         <div class="col-sm-6">
                             <div class="form-check">
@@ -170,8 +187,17 @@
                     </div>
 
                     <div class="form-group row justify-content-center align-items-center">
-                        <div class="col-sm-3">
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                        <div class="justify-content-end align-items-center">
+                            <div class="col-sm-3">
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                        </div>
+                        <div class="justify-content-center align-items-center">
+                            <div class="col-sm">
+                                <button class="btn btn-secondary" [routerLink]="['/']">
+                                    <i class="fa fa-home"></i> Home
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </fieldset>

@@ -10,7 +10,7 @@ import { DashboardIssues, Issue } from '../models/issue';
 })
 export class DashboardService {
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient) { }
 
   getIssues(): Observable<DashboardIssues[]> {
     let dashboardUrl = 'http://127.0.0.1:5000/';
@@ -23,8 +23,17 @@ export class DashboardService {
   }
 
   getSelectedIssue(issue_id): Observable<Issue> {
-    let selectecIssueUrl = `http://127.0.0.1:5000/${issue_id}`;
+    let selectecIssueUrl = `http://127.0.0.1:5000/issue/${issue_id}`;
     return this.httpClient.get<Issue>(selectecIssueUrl);
+  }
+
+  getIssueFile(issue_file_name: string): Observable<any> {
+    let issueFileUrl = `http://127.0.0.1:5000/file?issue_file_name=${issue_file_name}`;
+
+    const httpOptions = {
+      responseType: 'blob' as 'json',
+    };
+    return this.httpClient.get<any>(issueFileUrl, httpOptions)
   }
 
 }

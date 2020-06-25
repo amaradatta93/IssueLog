@@ -13,6 +13,7 @@ export class Issue {
     issue_fix_date: string;
     status: string;
     support_engineer_comments: string;
+    issue_file: string;
 }
 
 export class DashboardIssues {

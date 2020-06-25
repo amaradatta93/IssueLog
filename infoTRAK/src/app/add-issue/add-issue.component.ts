@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { AddIssueService } from '../services/add-issue.service';
+import { FormValidator } from '../_helpers/validator';
 import { Router } from '@angular/router';
 
 @Component({
@@ -9,40 +10,64 @@ import { Router } from '@angular/router';
   templateUrl: './add-issue.component.html',
   styleUrls: ['./add-issue.component.css']
 })
-export class AddIssueComponent implements OnInit {
+export class AddIssueComponent extends FormValidator implements OnInit {
   error_message: any;
   success_message: any;
+  issueFile: File;
   addIssueForm: FormGroup;
 
   constructor(private formBuilder: FormBuilder,
     private addIssueService: AddIssueService,
-    private router: Router) { }
+    private router: Router) {
+      super();
+    }
 
   ngOnInit(): void {
     this.error_message = null;
     this.success_message = null;
+    this.issueFile = null;
+
     this.addIssueForm = this.formBuilder.group({
-      customer_name: [''],
-      company: [''],
+      customer_name: ['', Validators.required],
+      company: ['', Validators.required],
       source: ['Phone'],
-      e_mail: [''],
-      phone_number: [''],
+      e_mail: ['', Validators.required],
+      phone_number: ['', Validators.required],
       issue_report_date: [this.todayDate()],
-      issue_description: [''],
+      issue_description: ['', Validators.required],
+      issue_file: [''],
       domain: ['Fleet'],
       priority: ['Low'],
       assigned_to: ['Support'],
-      issue_fixed_date: [''],
+      issue_fixed_date: ['', Validators.required],
       status: ['Working'],
-      support_engineer_comments: [''],
+      support_engineer_comments: ['']
     });
 
   }
 
   onSubmit() {
-    this.addIssueService.addIssues(this.addIssueForm.value).subscribe(res => {
-      console.warn('Your issue has been recorded');
-      if (res['success'] === true){
+    const myFormValue = this.addIssueForm.value
+    let myFormValueKeys = Object.keys(myFormValue);
+
+    const myFormData = new FormData();
+    for (let i = 0; i < myFormValueKeys.length; i++) {
+      let key = myFormValueKeys[i];
+
+      if (key === 'issue_file') {
+        if (this.issueFile) {
+          myFormData.append('issue_file', this.issueFile, this.issueFile.name);
+        } else {
+          myFormData.append('issue_file', '');
+        }
+      } else {
+        myFormData.append(key, myFormValue[key]);
+      }
+    }
+
+    this.addIssueService.addIssues(myFormData).subscribe(res => {
+      if (res['success'] === true) {
+        console.warn('Your issue has been recorded');
         this.success_message = "Issue Added Successfully";
         this.router.navigateByUrl('/')
       } else {
@@ -53,7 +78,11 @@ export class AddIssueComponent implements OnInit {
 
   todayDate() {
     const currentDate = new Date();
-    return currentDate.toISOString().substring(0,10);
+    return currentDate.toISOString().substring(0, 10);
+  }
+
+  handleFileInput(files: FileList) {
+    this.issueFile = files.item(0);
   }
 
   clearMessage() {

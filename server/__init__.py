@@ -5,7 +5,7 @@ from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
 
-from server.config import username, password, host, db_name
+from server.config import username, password, host, db_name, UPLOAD_FOLDER
 from server.db import db
 
 
@@ -16,6 +16,7 @@ def create_app(test_config=None):
     JWTManager(app)
     app.config.from_mapping(
         SECRET_KEY='dev',
+        UPLOAD_FOLDER=UPLOAD_FOLDER,
         SQLALCHEMY_TRACK_MODIFICATIONS=False
     )
     app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql://{username}:{password}@{host}/{db_name}'

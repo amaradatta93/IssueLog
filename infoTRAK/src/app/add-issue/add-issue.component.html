@@ -1,12 +1,11 @@
 <div class="container">
-    <div class="row justify-content-center align-items-center">
-        <div class="col-md-12 btn-row mb-3">
-            <button class="btn btn-lg btn-secondary" [routerLink]="['/']"><i class="fa fa-home"></i> Home</button>
+    <div class="row">
+        <div class="col-md-9">
+            <h3>Report Issue</h3>
         </div>
     </div>
     <div class="row mt-2 justify-content-center align-items-center">
         <div class="col-md-12">
-
             <form enctype="multipart/form-data" [formGroup]="addIssueForm" (ngSubmit)="onSubmit()" method="POST">
                 <fieldset>
 
@@ -17,25 +16,40 @@
                                 placeholder="Customer Name">
                         </div>
                     </div>
+                    <div>
+                        <label class="error-msg"
+                            *ngIf="isRequired(addIssueForm, 'customer_name') && isTouched(addIssueForm,'customer_name')">
+                            Field Required
+                        </label>
+                    </div>
 
                     <div class="form-group row">
                         <label for="company" class="col-sm-2 col-form-label">Company</label>
                         <div class="col-sm-6">
-                            <input type="text" class="form-control" id="company" formControlName="company" placeholder="Company">
+                            <input type="text" class="form-control" id="company" formControlName="company"
+                                placeholder="Company">
                         </div>
+                    </div>
+                    <div>
+                        <label class="error-msg"
+                            *ngIf="isRequired(addIssueForm, 'company') && isTouched(addIssueForm,'company')">
+                            Field Required
+                        </label>
                     </div>
 
                     <div class="form-group row">
                         <legend class="col-form-label col-sm-2 pt-0">Source</legend>
                         <div class="col-sm-6">
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" formControlName="source" id="phone" value="Phone">
+                                <input class="form-check-input" type="radio" formControlName="source" id="phone"
+                                    value="Phone">
                                 <label class="form-check-label" for="phone">
                                     Phone
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" formControlName="source" id="email" value="E-Mail">
+                                <input class="form-check-input" type="radio" formControlName="source" id="email"
+                                    value="E-Mail">
                                 <label class="form-check-label" for="email">
                                     E - Mail
                                 </label>
@@ -50,6 +64,12 @@
                                 placeholder="name@example.com">
                         </div>
                     </div>
+                    <div>
+                        <label class="error-msg"
+                            *ngIf="isRequired(addIssueForm, 'e_mail') && isTouched(addIssueForm,'e_mail')">
+                            Field Required
+                        </label>
+                    </div>
 
                     <div class="form-group row">
                         <label for="phoneNumber" class="col-sm-2 col-form-label">Phone</label>
@@ -58,11 +78,18 @@
                                 placeholder="1234567890">
                         </div>
                     </div>
+                    <div>
+                        <label class="error-msg"
+                            *ngIf="isRequired(addIssueForm, 'phone_number') && isTouched(addIssueForm,'phone_number')">
+                            Field Required
+                        </label>
+                    </div>
 
                     <div class="form-group row">
                         <label for="issueReportDate" class="col-sm-2 col-form-label">Issue Report Date</label>
                         <div class="col-sm-6">
-                            <input type="date" class="form-control" id="issueReportDate" formControlName="issue_report_date">
+                            <input type="date" class="form-control" id="issueReportDate"
+                                formControlName="issue_report_date">
                         </div>
                     </div>
 
@@ -73,18 +100,34 @@
                                 formControlName="issue_description"></textarea>
                         </div>
                     </div>
+                    <div>
+                        <label class="error-msg"
+                            *ngIf="isRequired(addIssueForm, 'issue_description') && isTouched(addIssueForm,'issue_description')">
+                            Field Required
+                        </label>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="issueFile" class="col-sm-2 col-form-label">Attachment</label>
+                        <div class="col-sm-6">
+                            <input type="file" class="upload" id="issueFile" formControlName="issue_file"
+                                (change)="handleFileInput($event.target.files)">
+                        </div>
+                    </div>
 
                     <div class="form-group row">
                         <legend class="col-form-label col-sm-2 pt-0">Domain</legend>
                         <div class="col-sm-6">
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" formControlName="domain" id="fleet" value="Fleet">
+                                <input class="form-check-input" type="radio" formControlName="domain" id="fleet"
+                                    value="Fleet">
                                 <label class="form-check-label" for="fleet">
                                     Fleet
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" formControlName="domain" id="hos" value="HOS">
+                                <input class="form-check-input" type="radio" formControlName="domain" id="hos"
+                                    value="HOS">
                                 <label class="form-check-label" for="hos">
                                     HOS
                                 </label>
@@ -117,8 +160,15 @@
                     <div class="form-group row">
                         <label for="issueFixedDate" class="col-sm-2 col-form-label">Expected Fix Date</label>
                         <div class="col-sm-6">
-                            <input type="date" class="form-control" id="issueFixedDate" formControlName="issue_fixed_date">
+                            <input type="date" class="form-control" id="issueFixedDate"
+                                formControlName="issue_fixed_date">
                         </div>
+                    </div>
+                    <div>
+                        <label class="error-msg"
+                            *ngIf="isRequired(addIssueForm, 'issue_fixed_date') && isTouched(addIssueForm,'issue_fixed_date')">
+                            Field Required
+                        </label>
                     </div>
 
                     <div class="form-group row">
@@ -141,8 +191,17 @@
                     </div>
 
                     <div class="form-group row justify-content-center align-items-center">
-                        <div class="col-sm-3">
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                        <div class="justify-content-end align-items-center">
+                            <div class="col-sm mr-2">
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                        </div>
+                        <div class="justify-content-end align-items-end">
+                            <div class="col-sm ml-2">
+                                <button class="btn btn-secondary" [routerLink]="['/']">
+                                    <i class="fa fa-home"></i> Home
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </fieldset>
@@ -151,4 +210,3 @@
         </div>
     </div>
 </div>
-

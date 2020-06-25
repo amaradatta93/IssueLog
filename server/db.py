@@ -20,8 +20,9 @@ class Issues(db.Model):
     assigned_to = db.Column(db.String(255), nullable=False)
     issue_fix_date = db.Column(db.String(10), nullable=False)
     status = db.Column(db.String(255), nullable=False)
-    support_engineer_comments = db.Column(db.Text, nullable=False)
+    support_engineer_comments = db.Column(db.Text, nullable=True)
     user_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
+    issue_file = db.Column(db.String(255), nullable=True)
 
     def as_dict(self):
         return {
@@ -38,7 +39,8 @@ class Issues(db.Model):
             'support_engineer': self.support_engineer,
             'issue_fix_date': str(self.issue_fix_date),
             'status': self.status,
-            'support_engineer_comments': self.support_engineer_comments
+            'support_engineer_comments': self.support_engineer_comments,
+            'issue_file': self.issue_file
         }
 
 
@@ -46,7 +48,7 @@ class IssueSchema(ma.Schema):
     class Meta:
         fields = (
             'id', 'customer_name', 'company', 'source', 'email', 'phone', 'issue_report_date', 'issue_description',
-            'domain', 'priority', 'assigned_to', 'issue_fix_date', 'status', 'support_engineer_comments'
+            'domain', 'priority', 'assigned_to', 'issue_fix_date', 'status', 'support_engineer_comments', 'issue_file'
         )
 
 

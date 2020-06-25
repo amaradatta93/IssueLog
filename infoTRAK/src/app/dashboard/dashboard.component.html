@@ -63,6 +63,14 @@
                                         <b>Phone:</b> {{selectedIssue.phone}} <br>
                                         <b>Issue Report Date:</b> {{selectedIssue.issue_report_date}} <br>
                                         <b>Issue Description:</b> {{selectedIssue.issue_description}} <br>
+                                        <span *ngIf="selectedIssue.issue_file">
+                                            <b>Issue Attachment:</b> {{selectedIssue.issue_file}} <button
+                                                class="btn btn-outline-primary" type="button"
+                                                (click)="getFile(selectedIssue.issue_file)">
+                                                <b><i class="fa fa-download"></i></b>
+                                            </button>
+                                            <br>
+                                        </span>
                                         <b>Domain:</b> {{selectedIssue.domain}} <br>
                                         <b>Priority:</b> {{selectedIssue.priority}} <br>
                                         <b>Support Engineer:</b> {{selectedIssue.assigned_to}} <br>

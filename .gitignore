@@ -363,4 +363,7 @@ auth.sh
 # Flask Session directory
 flask_session/*
 
+# Document Upload directory
+upload_folder/*
+
 # End of https://www.gitignore.io/api/venv,flask,pycharm,virtualenv,pycharm+iml,pycharm+all

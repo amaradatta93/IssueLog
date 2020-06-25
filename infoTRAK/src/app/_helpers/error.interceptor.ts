@@ -5,7 +5,7 @@ import { Observable, throwError, from } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
-import{ AuthService } from '../services/auth.service'
+import { AuthService } from '../services/auth.service'
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
@@ -13,21 +13,21 @@ export class ErrorInterceptor implements HttpInterceptor {
   constructor(private authService: AuthService,
     private router: Router) { }
 
-    intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        return next.handle(request).pipe(catchError(err => {
-            if (err.status === 401) {
-                this.authService.logOutUser()
-                .subscribe(res => {
-                    console.warn('Forbidden Request');
-                    if (res['login'] === false){
-                      this.router.navigateByUrl('/auth')
-                    }
-                  });
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    return next.handle(request).pipe(catchError(err => {
+      if (err.status === 401) {
+        this.authService.logOutUser()
+          .subscribe(res => {
+            if (res['login'] === false) {
+              console.warn('Forbidden Request');
+              this.router.navigateByUrl('/auth');
             }
+          });
+      }
 
-            const error = err.error.message || err.statusText;
-            return throwError(error);
-        }))
-    }
+      const error = err.error.message || err.statusText;
+      return throwError(error);
+    }))
+  }
 
 }

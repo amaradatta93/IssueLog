@@ -57,12 +57,13 @@ export class AuthComponent extends FormValidator implements OnInit {
     this.success_message = null;
     this.authService.logInUser(this.logInForm.value)
       .subscribe(res => {
-        console.warn('Login successful');
-        if (this.authService.currentUserValue) {
-          this.router.navigateByUrl('/');
-        } else {
+        if (res['error']) {
           this.error_message = res['error'];
+          console.log(res['error']);
           this.router.navigateByUrl('/auth');
+        } else if (this.authService.currentUserValue) {
+          console.warn('Login successful');
+          this.router.navigateByUrl('/');
         }
       });
   }
@@ -72,12 +73,12 @@ export class AuthComponent extends FormValidator implements OnInit {
     this.success_message = null;
     this.authService.registerUser(this.registerForm.value)
       .subscribe(res => {
-        console.warn('Registration successful');
-        if (res['register'] === true) {
+        if (res['error']) {
+          this.error_message = res['error'];
+        } else if (res['register'] === true) {
+          console.warn('Registration successful');
           this.router.navigateByUrl('/auth');
           this.success_message = 'Successfully registered';
-        } else {
-          this.error_message = res['error'];
         }
       });
   }

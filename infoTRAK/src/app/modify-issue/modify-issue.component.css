@@ -7,3 +7,15 @@
     padding-top: 1.5%;
     padding-left: 10%;
 }
+
+h3 {
+    text-align: center;
+    color: #484a8e;
+}
+
+input .upload{
+    outline: none !important;
+    outline-style: none !important;
+    box-shadow: none !important;
+    border-color: transparent !important;
+}
