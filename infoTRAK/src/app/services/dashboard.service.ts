@@ -36,4 +36,8 @@ export class DashboardService {
     return this.httpClient.get<any>(issueFileUrl, httpOptions)
   }
 
+  sendReminderEmail(reminder_data): Observable<any> {
+    let remindIssueUrl = `http://127.0.0.1:5000/remind`;
+    return this.httpClient.post<any>(remindIssueUrl, reminder_data);
+  }
 }

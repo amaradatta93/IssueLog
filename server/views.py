@@ -1,14 +1,13 @@
-import os
-
 from flask import request, Blueprint, jsonify, send_from_directory
 from flask.views import MethodView
 from flask_cors import CORS
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from werkzeug.utils import secure_filename
 
 from server import UPLOAD_FOLDER
 from server.db import db, Issues, IssueSchema, IssuesSchema
 from server.forms import IssueForm
+from server.utils import email_service, get_recipients, add_issue_email_body, edit_issue_email_body, \
+    assign_customer_data_to_issue, delete_old_file_from_folder, save_file_to_folder, get_reminder_email_content
 
 dashboard = Blueprint('dashboard', __name__)
 CORS(dashboard)
@@ -47,29 +46,19 @@ class Main(MethodView):
             issue = Issues()
 
             try:
-                issue.customer_name = new_issue.customer_name.data
-                issue.company = new_issue.company.data
-                issue.source = new_issue.source.data
-                issue.email = new_issue.e_mail.data
-                issue.phone = new_issue.phone_number.data
-                issue.issue_report_date = new_issue.issue_report_date.data
-                issue.issue_description = new_issue.issue_description.data
-                issue.domain = new_issue.domain.data
-                issue.priority = new_issue.priority.data
-                issue.assigned_to = new_issue.assigned_to.data
-                issue.issue_fix_date = new_issue.issue_fixed_date.data
-                issue.status = new_issue.status.data
-                issue.support_engineer_comments = new_issue.support_engineer_comments.data
-                issue.user_id = identity['id']
+                issue = assign_customer_data_to_issue(issue, new_issue, identity['id'])
 
                 if request.files:
                     file = request.files['issue_file']
-                    name = secure_filename(file.filename)
-                    filename = str(new_issue.issue_report_date.data) + '-' + name
-                    file.save(os.path.join(UPLOAD_FOLDER, filename))
+                    filename = save_file_to_folder(UPLOAD_FOLDER, file, str(new_issue.issue_report_date.data))
                     issue.issue_file = filename
                 else:
                     issue.issue_file = None
+
+                recipients = get_recipients(new_issue.assigned_to.data)
+                email_body = add_issue_email_body(new_issue)
+                subject = f"{identity['username']} has added an issue"
+                email_service(recipients, email_body, subject)
 
                 db.session.add(issue)
                 db.session.commit()
@@ -87,28 +76,19 @@ class Main(MethodView):
 
             try:
                 issue = Issues.query.get(issue_id)
-                issue.customer_name = updated_issue.customer_name.data
-                issue.company = updated_issue.company.data
-                issue.source = updated_issue.source.data
-                issue.email = updated_issue.e_mail.data
-                issue.phone = updated_issue.phone_number.data
-                issue.issue_report_date = updated_issue.issue_report_date.data
-                issue.issue_description = updated_issue.issue_description.data
-                issue.domain = updated_issue.domain.data
-                issue.priority = updated_issue.priority.data
-                issue.assigned_to = updated_issue.assigned_to.data
-                issue.issue_fix_date = updated_issue.issue_fixed_date.data
-                issue.status = updated_issue.status.data
-                issue.support_engineer_comments = updated_issue.support_engineer_comments.data
-                issue.user_id = identity['id']
+                issue = assign_customer_data_to_issue(issue, updated_issue, identity['id'])
 
                 if request.files:
-                    os.remove(os.path.join(UPLOAD_FOLDER, issue.issue_file))
                     file = request.files['issue_file']
-                    name = secure_filename(file.filename)
-                    filename = str(updated_issue.issue_report_date.data) + '-' + name
-                    file.save(os.path.join(UPLOAD_FOLDER, filename))
+
+                    delete_old_file_from_folder(UPLOAD_FOLDER, issue.issue_file)
+                    filename = save_file_to_folder(UPLOAD_FOLDER, file, str(updated_issue.issue_report_date.data))
                     issue.issue_file = filename
+
+                recipients = get_recipients(updated_issue.assigned_to.data)
+                email_body = edit_issue_email_body(updated_issue, issue_id)
+                subject = f"{identity['username']} has updated the ticket {issue_id}"
+                email_service(recipients, email_body, subject)
 
                 db.session.add(issue)
                 db.session.commit()
@@ -125,6 +105,8 @@ class Main(MethodView):
         if request.method == "DELETE" and issue_id and identity['role'] == 'admin':
             try:
                 issue = Issues.query.get(issue_id)
+                delete_old_file_from_folder(UPLOAD_FOLDER, issue.issue_file)
+
                 db.session.delete(issue)
                 db.session.commit()
                 resp = jsonify(success=True)
@@ -176,3 +158,25 @@ class FileView(MethodView):
 
 
 dashboard.add_url_rule('/file', view_func=FileView.as_view('issue_file_view'))
+
+
+class IssueReminder(MethodView):
+    decorators = [jwt_required]
+
+    def post(self):
+        resp = jsonify(reminder=False)
+        identity = get_jwt_identity()
+
+        if request.method == "POST":
+            reminder_data = request.get_json()
+            ticket, assigned_to = reminder_data['id'], reminder_data['assigned_to']
+            recipients = get_recipients(assigned_to)
+            content = get_reminder_email_content(ticket, identity['username'])
+            subject = f"Reminder email from {identity['username']}"
+            email_service(recipients, content, subject)
+            resp = jsonify(reminder=True)
+
+        return resp
+
+
+dashboard.add_url_rule('/remind', view_func=IssueReminder.as_view('issue_reminder_email'))

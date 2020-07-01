@@ -19,6 +19,11 @@ td {
     text-align: center;
 }
 
+.description {
+    max-width:500px;
+    word-wrap:break-word;
+}
+
 ul {
     list-style-type: none;
 }

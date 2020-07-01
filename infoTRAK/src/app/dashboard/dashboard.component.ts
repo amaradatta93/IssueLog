@@ -19,6 +19,7 @@ export class DashboardComponent implements OnInit, OnChanges {
   issueFile: File;
   blob: Blob;
   search_params: string;
+  confirmation: string;
 
   onChangeStatus(value: any) {
     this.filterValue = value;
@@ -61,10 +62,29 @@ export class DashboardComponent implements OnInit, OnChanges {
       });
   }
 
+  remind(assigned_to, id): void {
+    let reminder_data = {
+      'id': id,
+      'assigned_to': assigned_to
+    }
+    this.dashboardService.sendReminderEmail(reminder_data)
+      .subscribe((res) => {
+        if (res['reminder'] == false) {
+          this.confirmation = 'Failed to remind';
+        } else {
+          this.confirmation = 'Reminder sent';
+        }
+      });
+  }
+
   openScrollableContent(longContent, issue_id) {
     this.modalService.open(longContent, { scrollable: true });
     this.dashboardService.getSelectedIssue(issue_id)
       .subscribe((selectedIssue: any) => this.selectedIssue = selectedIssue.issue);
+  }
+
+  clearMessage() {
+    this.confirmation = null;
   }
 
 }

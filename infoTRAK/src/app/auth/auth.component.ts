@@ -4,6 +4,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { FormValidator } from '../_helpers/validator';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-auth',
@@ -28,8 +29,14 @@ export class AuthComponent extends FormValidator implements OnInit {
     email: ['', Validators.required]
   });
 
+
+  forgotPasswordForm = this.formBuilder.group({
+    email_to: ['', Validators.required]
+  });
+
   constructor(private authService: AuthService,
     private formBuilder: FormBuilder,
+    private modalService: NgbModal,
     private router: Router) {
     super();
     if (this.authService.currentUserValue) {
@@ -72,15 +79,35 @@ export class AuthComponent extends FormValidator implements OnInit {
     this.error_message = null;
     this.success_message = null;
     this.authService.registerUser(this.registerForm.value)
-      .subscribe(res => {
-        if (res['error']) {
-          this.error_message = res['error'];
-        } else if (res['register'] === true) {
-          console.warn('Registration successful');
-          this.router.navigateByUrl('/auth');
-          this.success_message = 'Successfully registered';
-        }
-      });
+    .subscribe(res => {
+      if (res['error']) {
+        this.error_message = res['error'];
+      } else if (res['register'] === true) {
+        console.warn('Registration successful');
+        this.router.navigateByUrl('/auth');
+        this.success_message = 'Successfully registered';
+      }
+    });
+  }
+
+  forgotPassword() {
+    this.authService.resetPassword(this.forgotPasswordForm.value)
+    .subscribe(res => {
+      if (res['error']) {
+        this.error_message = res['error'];
+        this.forgotPasswordForm.reset();
+        this.modalService.dismissAll();
+      } else if (res['password_reset'] === true) {
+        console.warn('Reset successful');
+        this.success_message = `If your Email-ID is registered you should've received the email on ${this.forgotPasswordForm.value.email_to}`;
+        this.forgotPasswordForm.reset();
+        this.modalService.dismissAll();
+      }
+    });
+  }
+
+  openSm(content) {
+    this.modalService.open(content, { centered: true });
   }
 
   clearMessage() {

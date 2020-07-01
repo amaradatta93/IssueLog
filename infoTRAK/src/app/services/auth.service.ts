@@ -61,4 +61,9 @@ export class AuthService {
     return this.httpClient.post(passwordChangeUrl, password_details);
   }
 
+  resetPassword(email_to: any): Observable<any> {
+    let passwordResetUrl = `http://127.0.0.1:5000/auth/password-reset`;
+    return this.httpClient.post(passwordResetUrl, email_to);
+  }
+
 }

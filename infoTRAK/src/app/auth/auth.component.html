@@ -57,8 +57,39 @@
 
                         <div class="row">
                             <div class="col-md forgot">
-                                <a><u>Forgot Password?</u></a>
+                                <a (click)="openSm(content)"><u>Forgot Password?</u></a>
                             </div>
+
+                            <ng-template #content let-modal>
+
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Enter your Email-ID associated with the account</h5>
+                                    <button type="button" class="close" aria-label="Close"
+                                        (click)="modal.dismiss('Cross click')">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form [formGroup]="forgotPasswordForm" (ngSubmit)="forgotPassword()">
+                                    <div class="modal-body">
+                                        <p><input type="email" class="form-control" placeholder="email@domain.com"
+                                                formControlName="email_to">
+                                        </p>
+                                    </div>
+                                    <div class=" row justify-content-center align-items-center">
+                                        <label class="error-msg"
+                                            *ngIf="isRequired(forgotPasswordForm, 'email_to') && isTouched(forgotPasswordForm,'email_to')">
+                                                *Required field
+                                        </label>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            (click)="modal.close('Close click')">Close</button>
+                                        <input type="submit" class="btn btn-primary" value="Submit">
+                                    </div>
+                                </form>
+
+                            </ng-template>
+
                             <div class="col-md login_button">
                                 <input type="submit" value="Login" class="btn login_btn">
                             </div>

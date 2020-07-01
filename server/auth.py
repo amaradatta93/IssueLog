@@ -3,10 +3,10 @@ from flask import (
 )
 from flask_cors import CORS
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
-
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from server.db import db, User, Role, UserRoles, UserSchema
+from server.utils import generate_random_password, email_service, get_reset_email_body, get_recipients
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 issue_schema = UserSchema()
@@ -129,6 +129,42 @@ def password_change():
 
             resp = jsonify(password_change=True)
             return resp
+
+        resp = jsonify(error=error)
+
+    return resp
+
+
+@bp.route('/password-reset', methods=('GET', 'POST'))
+def password_reset():
+    resp = jsonify(password_reset=False)
+
+    if request.method == 'POST':
+        error = None
+        reset = False
+        user_input = request.get_json()
+        reset_email = user_input['email_to']
+
+        user = User.query.filter_by(user_email=reset_email).first()
+
+        if user is None:
+            error = 'Invalid Email-ID. Try again'
+
+        if error is None:
+            new_password = generate_random_password()
+            user.password = generate_password_hash(new_password)
+
+            email_body = get_reset_email_body(new_password)
+            recipient = get_recipients(reset_email)
+            reset = email_service(recipient, email_body, 'PASSWORD RESET ALERT')
+
+        if reset:
+            db.session.add(user)
+            db.session.commit()
+            resp = jsonify(password_reset=True)
+            return resp
+        else:
+            error = 'Password Reset Failed'
 
         resp = jsonify(error=error)
 
