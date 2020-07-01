@@ -99,7 +99,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group row">
+                    <div *ngIf="issue.issue_file" class="form-group row">
                         <label class="col-sm-2 col-form-label">Attachment</label>
                         <div class="col-sm-6">
                             {{ issue.issue_file }}
