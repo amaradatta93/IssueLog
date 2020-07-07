@@ -28,6 +28,12 @@ def register():
 
         error = None
 
+        if not Role.query.all():
+            admin = Role(id=1, name='admin')
+            client = Role(id=2, name='user')
+            db.session.add_all([admin, client])
+            db.session.commit()
+
         if not username:
             error = 'Username is required.'
         elif not password:

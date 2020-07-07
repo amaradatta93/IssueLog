@@ -5,7 +5,6 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Issue, DashboardIssues } from '../models/issue';
 import { DashboardService } from '../services/dashboard.service';
 import { ActivatedRoute } from '@angular/router';
-import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-dashboard',
