@@ -92,6 +92,7 @@ def get_recipients(recipient):
         recipient_list.append('sridhar@qwickbit.com')
         recipient_list.append('ravi@info-spectrum.com')
         recipient_list.append('rbush@info-spectrum.com')
+        recipient_list.append('support@info-spectrum.com')
     else:
         recipient_list = [recipient]
 
@@ -115,7 +116,7 @@ def email_service(recipients, content, subject):
     return status
 
 
-def assign_customer_data_to_issue(db_issue, customer_data, id):
+def assign_customer_data_to_issue(db_issue, customer_data):
     db_issue.customer_name = customer_data.customer_name.data
     db_issue.company = customer_data.company.data
     db_issue.source = customer_data.source.data
@@ -129,7 +130,6 @@ def assign_customer_data_to_issue(db_issue, customer_data, id):
     db_issue.issue_fix_date = customer_data.issue_fixed_date.data
     db_issue.status = customer_data.status.data
     db_issue.support_engineer_comments = customer_data.support_engineer_comments.data
-    db_issue.user_id = id
     return db_issue
 
 

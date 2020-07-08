@@ -3,7 +3,7 @@ from flask.views import MethodView
 from flask_cors import CORS
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
-from server import UPLOAD_FOLDER
+from server.config import UPLOAD_FOLDER
 from server.db import db, Issues, IssueSchema, IssuesSchema
 from server.forms import IssueForm
 from server.utils import email_service, get_recipients, add_issue_email_body, edit_issue_email_body, \
@@ -46,7 +46,8 @@ class Main(MethodView):
             issue = Issues()
 
             try:
-                issue = assign_customer_data_to_issue(issue, new_issue, identity['id'])
+                issue = assign_customer_data_to_issue(issue, new_issue)
+                issue.user_id = identity['id']
 
                 if request.files:
                     file = request.files['issue_file']
@@ -76,12 +77,13 @@ class Main(MethodView):
 
             try:
                 issue = Issues.query.get(issue_id)
-                issue = assign_customer_data_to_issue(issue, updated_issue, identity['id'])
+                issue = assign_customer_data_to_issue(issue, updated_issue)
 
                 if request.files:
                     file = request.files['issue_file']
 
-                    delete_old_file_from_folder(UPLOAD_FOLDER, issue.issue_file)
+                    if issue.issue_file:
+                        delete_old_file_from_folder(UPLOAD_FOLDER, issue.issue_file)
                     filename = save_file_to_folder(UPLOAD_FOLDER, file, str(updated_issue.issue_report_date.data))
                     issue.issue_file = filename
 
