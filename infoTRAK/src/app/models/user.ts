@@ -11,3 +11,10 @@ export class User {
     email: string;
     token?: string;
 }
+
+export class UserDetails {
+    id: number;
+    username: string;
+    user_email: string;
+    role: string;
+}

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 
-import { AuthService } from '@app/services/auth.service';
+import { AuthService } from '../services/auth.service';
 import { FormValidator } from '../_helpers/validator';
 
 

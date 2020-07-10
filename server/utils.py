@@ -127,6 +127,7 @@ def assign_customer_data_to_issue(db_issue, customer_data):
     db_issue.domain = customer_data.domain.data
     db_issue.priority = customer_data.priority.data
     db_issue.assigned_to = customer_data.assigned_to.data
+    db_issue.support_engineer = customer_data.support_engineer.data
     db_issue.issue_fix_date = customer_data.issue_fixed_date.data
     db_issue.status = customer_data.status.data
     db_issue.support_engineer_comments = customer_data.support_engineer_comments.data

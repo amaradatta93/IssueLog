@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import { AddIssueService } from '../services/add-issue.service';
+import { NavbarService } from '../services/navbar.service';
 import { FormValidator } from '../_helpers/validator';
-import { Router } from '@angular/router';
+
+import { SupportEngineer } from '../models/support-engineer';
 
 @Component({
   selector: 'app-add-issue',
@@ -15,9 +18,11 @@ export class AddIssueComponent extends FormValidator implements OnInit {
   success_message: any;
   issueFile: File;
   addIssueForm: FormGroup;
+  support_engineers: SupportEngineer[];
 
   constructor(private formBuilder: FormBuilder,
     private addIssueService: AddIssueService,
+    private navbarService: NavbarService,
     private router: Router) {
       super();
     }
@@ -26,6 +31,7 @@ export class AddIssueComponent extends FormValidator implements OnInit {
     this.error_message = null;
     this.success_message = null;
     this.issueFile = null;
+    this.getSupportEngineers();
 
     this.addIssueForm = this.formBuilder.group({
       customer_name: ['', Validators.required],
@@ -39,11 +45,24 @@ export class AddIssueComponent extends FormValidator implements OnInit {
       domain: ['Fleet'],
       priority: ['Low'],
       assigned_to: ['Support'],
+      support_engineer: ['unassigned'],
       issue_fixed_date: ['', Validators.required],
       status: ['Working'],
       support_engineer_comments: ['']
     });
 
+  }
+
+
+  getSupportEngineers () {
+    this.navbarService.getSupportEngineer()
+      .subscribe((support_engineers: any) => {
+        if (support_engineers) {
+          this.support_engineers = support_engineers.support_engineers;
+        } else {
+          this.support_engineers = null;
+        }
+      });
   }
 
   onSubmit() {

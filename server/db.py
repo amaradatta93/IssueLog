@@ -18,45 +18,41 @@ class Issues(db.Model):
     domain = db.Column(db.String(255), nullable=False)
     priority = db.Column(db.String(255), nullable=False)
     assigned_to = db.Column(db.String(255), nullable=False)
+    support_engineer = db.Column(db.String(255), nullable=False)
     issue_fix_date = db.Column(db.String(10), nullable=False)
     status = db.Column(db.String(255), nullable=False)
     support_engineer_comments = db.Column(db.Text, nullable=True)
     user_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
     issue_file = db.Column(db.String(255), nullable=True)
 
-    def as_dict(self):
-        return {
-            'id': self.id,
-            'customer_name': self.customer_name,
-            'company': self.company,
-            'source': self.source,
-            'email': self.email,
-            'phone': self.phone,
-            'issue_report_date': str(self.issue_report_date),
-            'issue_description': self.issue_description,
-            'domain': self.domain,
-            'priority': self.priority,
-            'support_engineer': self.support_engineer,
-            'issue_fix_date': str(self.issue_fix_date),
-            'status': self.status,
-            'support_engineer_comments': self.support_engineer_comments,
-            'issue_file': self.issue_file
-        }
-
 
 class IssueSchema(ma.Schema):
     class Meta:
         fields = (
             'id', 'customer_name', 'company', 'source', 'email', 'phone', 'issue_report_date', 'issue_description',
-            'domain', 'priority', 'assigned_to', 'issue_fix_date', 'status', 'support_engineer_comments', 'issue_file'
+            'domain', 'priority', 'assigned_to', 'support_engineer', 'issue_fix_date', 'status',
+            'support_engineer_comments', 'issue_file'
         )
 
 
 class IssuesSchema(ma.Schema):
     class Meta:
         fields = (
-            'id', 'company', 'issue_report_date', 'issue_description', 'priority', 'domain',
+            'id', 'company', 'issue_report_date', 'issue_description', 'priority', 'domain', 'support_engineer',
             'assigned_to', 'status'
+        )
+
+
+class SupportEngineers(db.Model):
+    __tablename__ = 'support_engineers'
+    id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
+    support_engineer_name = db.Column(db.String(255), nullable=False)
+
+
+class SupportEngineersSchema(ma.Schema):
+    class Meta:
+        fields = (
+            'id', 'support_engineer_name'
         )
 
 

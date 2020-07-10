@@ -182,3 +182,10 @@ def logout():
     session.clear()
     resp = jsonify(login=False)
     return resp
+
+
+@bp.route('/user')
+@jwt_required
+def user_details():
+    identity = get_jwt_identity()
+    return jsonify(identity)

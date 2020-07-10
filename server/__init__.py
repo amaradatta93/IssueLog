@@ -57,6 +57,6 @@ def create_app(test_config=None):
 
     from . import views
     app.register_blueprint(views.dashboard)
-    app.add_url_rule('/', endpoint='dashboard')
+    app.register_blueprint(views.support_engineers)
 
     return app

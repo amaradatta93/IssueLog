@@ -1,5 +1,5 @@
-<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark" id="navbarHeader">
-    <a class="navbar-brand" (click) = "selected($event, null)" [routerLink]="['/']">
+<nav *ngIf="user" class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark" id="navbarHeader">
+    <a class="navbar-brand" [routerLink]="['/']">
         <h3><i>info</i>TRAK</h3>
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -10,25 +10,63 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item mt-auto mb-auto dropdown"><a class="nav-link dropdown-toggle" href="#"
-                    id="filters" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <li class="nav-item mt-auto mb-auto dropdown"><a class="nav-link dropdown-toggle" href="#" id="filters"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <b class="filter">Filters <i class="fas fa-filter"></i></b>
                 </a>
-                <div class="dropdown-menu" id="mySelect" aria-labelledby="filters" >
-                    <option class="dropdown-item" style="color: #51a847;" (click) = "selected($event, {field: 'status', fieldValue: 'Fixed'})">
-                        Resolved
-                    </option>
-                    <option class="dropdown-item" style="color: #ff0000;" (click) = "selected($event, {field: 'status', fieldValue: 'Working'})">
-                        Unresolved
-                    </option>
-                    <div class="dropdown-divider"></div>
-                    <option class="dropdown-item" style="color: #297cff;" (click) = "selected($event, {field: 'domain', fieldValue: 'Fleet'})">
-                        Fleet
-                    </option>
-                    <option class="dropdown-item" style="color: #297cff;" (click) = "selected($event, {field: 'domain', fieldValue: 'HOS'})">
-                        HOS
-                    </option>
-                </div>
+
+                <form enctype="multipart/form-data" [formGroup]="filterForm" (ngSubmit)="addFilter()">
+                    <div class="dropdown-menu" id="mySelect" aria-labelledby="filters">
+                        <div class="dropdown-item">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="Fleet" formControlName="fleet">
+                                <label class="form-check-label" for="Fleet">
+                                    Fleet
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="HOS" formControlName="hos">
+                                <label class="form-check-label" for="HOS">
+                                    HOS
+                                </label>
+                            </div>
+
+
+                            <div class="dropdown-divider"></div>
+                            <b>Sub-filter</b>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" formControlName="status" id="all"
+                                    value="All">
+                                <label class="form-check-label" for="all">
+                                    All
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" formControlName="status" id="Fixed"
+                                    value="Fixed">
+                                <label class="form-check-label" for="Fixed">
+                                    Fixed
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" formControlName="status" id="Working"
+                                    value="Working">
+                                <label class="form-check-label" for="Working">
+                                    Working
+                                </label>
+                            </div>
+
+                            <div class="dropdown-divider"></div>
+
+                            <div class="row justify-content-center">
+                                <div class="btn-group-vertical btn-group-lg">
+                                    <button class="btn btn-outline-primary" type="submit">Apply Filters</button>
+                                    <button class="btn btn-outline-secondary" (click)="clearFilter()">Clear All</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </li>
 
             <li class="nav-item">
@@ -40,12 +78,16 @@
             </li>
         </ul>
 
+        <div class="mr-auto">
+            <h5>{{user.username | uppercase}}</h5>
+        </div>
+
         <form for="search-box" class="form-inline my-2 my-lg-0" action="#">
             <input #searchBox [(ngModel)]="searchValue" class="form-control mr-sm-2" type="search"
                 placeholder="Search Issue Keyword" aria-label="Search" name="searchbox">
 
             <button class="btn btn-outline-success my-2 my-sm-0" type="button" [routerLink]="['/']"
-                [queryParams]="{search_params: searchValue}" (click) = "selected($event, null)">
+                [queryParams]="{search_params: searchValue}">
                 Search
             </button>
         </form>
@@ -55,24 +97,92 @@
                 <li class="nav-item mt-auto mb-auto dropdown">
 
                     <div class="btn-group dropleft">
-                        <button type="button" class="btn btn-outline-danger ml-sm-2 my-2 my-sm-0 dropdown-toggle" 
+                        <button type="button" class="btn btn-outline-danger ml-sm-2 my-2 my-sm-0 dropdown-toggle"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <b>Settings <i class="fas fa-cog"></i></b>
                         </button>
 
                         <div class="dropdown-menu">
-                            <span class="dropdown-item" type="button" style="color: #1f1b1b;" (click) = "logout()">
+                            <span *ngIf="user.role === 'admin'" class="dropdown-item" type="button"
+                                style="color: #1f1b1b;" (click)="openScrollableContent(longContent)">
+                                <i class="fas fa-user" style="color: #1f1b1b;"></i> Add Support Engineer
+                            </span>
+                            <span class="dropdown-item" type="button" style="color: #1f1b1b;" (click)="logout()">
                                 <i class="fas fa-power-off" style="color: #1f1b1b;"></i> Logout
                             </span>
-                            <span class="dropdown-item" type="button" style="color: #1f1b1b;" (click) = "passwordChange()">
-                                Password Change
+                            <span class="dropdown-item" type="button" style="color: #1f1b1b;"
+                                (click)="passwordChange()">
+                                <i class="fa fa-key" style="color: #1f1b1b;"></i> Password Change
                             </span>
                         </div>
+
+                        <ng-template #longContent let-modal>
+                            <div class="modal-header">
+                                <h4 class="modal-title">Support Engineer List</h4>
+                                <button type="button" class="close" aria-label="Close"
+                                    (click)="modal.dismiss('Cross click')">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+
+                            <div *ngIf="error_message" class="row align-items-center justify-content-center">
+                                <div class="col-lg-11">
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        {{ error_message }}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"
+                                            (click)="clearMessage()">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="success_message" class="row align-items-center justify-content-center">
+                                <div class="col-lg-11">
+                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                        {{ success_message }}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"
+                                            (click)="clearMessage()">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <form [formGroup]="addSupportEngineerForm" (ngSubmit)="addSupportEngineer()">
+                                <div class="modal-body">
+                                    <div *ngIf="support_engineers">
+                                        <div class="row justify-content-center"
+                                            *ngFor="let support_engineer of support_engineers">
+                                            <div class="col-md-10 justify-content-center align-items-center ml-auto">
+                                                <p>{{support_engineer.support_engineer_name}}</p>
+                                            </div>
+                                            <div class="col-md-2 justify-content-center align-items-center">
+                                                <button type="button"
+                                                    (click)="deleteSupportEngineer(support_engineer.id)">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-1">
+                                        <div class="col-md justify-content-start">
+                                            <p><input type="text" class="form-control" placeholder="Enter the name"
+                                                    formControlName="support_engineer_name">
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-light"
+                                        (click)="modal.close('Close click')">Close</button>
+                                    <input type="submit" class="btn btn-primary" value="Submit">
+                                </div>
+                            </form>
+                        </ng-template>
 
                     </div>
                 </li>
             </ul>
         </form>
-
     </div>
 </nav>

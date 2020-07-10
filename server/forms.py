@@ -12,6 +12,7 @@ class IssueForm(Form):
     domain = RadioField()
     priority = SelectField()
     assigned_to = SelectField()
+    support_engineer = SelectField()
     issue_fixed_date = DateField()
     status = SelectField()
     support_engineer_comments = TextAreaField()

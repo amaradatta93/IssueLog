@@ -4,7 +4,18 @@
     <div class="mt-3" *ngIf="filterValue">
         <div class="row mt-3 justify-content-center align-items-center">
             <div class="col-md-12 mt-3">
-                <h4><i><i class="fas fa-filter"></i> {{filterValue["fieldValue"]}} </i></h4>
+                <h4><i><i class="fas fa-filter"></i></i></h4>
+            </div>
+        </div>
+        <div class="row mt-3 justify-content-center align-items-center">
+            <div class="col-md-12">
+                <h4><i *ngIf="filterValue['fleet']"> Fleet </i></h4>
+            </div>
+            <div class="col-md-12">
+                <h4><i *ngIf="filterValue['hos']"> HOS </i></h4>
+            </div>
+            <div class="col-md-12">
+                <h4><i *ngIf="filterValue['status']"> {{filterValue['status']}} </i></h4>
             </div>
         </div>
     </div>
@@ -20,6 +31,7 @@
                     <th>Priority</th>
                     <th>Domain</th>
                     <th>Assigned To</th>
+                    <th>Support Engineer</th>
                     <th>Status</th>
                     <th colspan="2">Action</th>
                 </tr>
@@ -34,6 +46,7 @@
                     <td>{{issue.priority}}</td>
                     <td>{{issue.domain}}</td>
                     <td>{{issue.assigned_to}}</td>
+                    <td>{{issue.support_engineer}}</td>
                     <td>{{issue.status}}</td>
                     <td>
                         <div class="row justify-content-center">
@@ -60,7 +73,8 @@
                                             <div class="col-lg-6">
                                                 <div class="alert alert-info alert-dismissible fade show" role="alert">
                                                     {{ confirmation }}
-                                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="clearMessage()">
+                                                    <button type="button" class="close" data-dismiss="alert"
+                                                        aria-label="Close" (click)="clearMessage()">
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
                                                 </div>
@@ -87,6 +101,7 @@
                                         <b>Domain:</b> {{selectedIssue.domain}} <br>
                                         <b>Priority:</b> {{selectedIssue.priority}} <br>
                                         <b>Assigned To:</b> {{selectedIssue.assigned_to}} <br>
+                                        <b>Support Engineer:</b> {{selectedIssue.support_engineer}} <br>
                                         <span *ngIf="selectedIssue.status == 'Working'">
                                             <b>Expected Fix Date:</b> {{selectedIssue.issue_fix_date}} <br>
                                         </span>
@@ -99,7 +114,8 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-warning"
-                                            (click)="remind(selectedIssue.assigned_to, selectedIssue.id)"><i class="far fa-bell"> Remind</i>
+                                            (click)="remind(selectedIssue.assigned_to, selectedIssue.id)"><i
+                                                class="far fa-bell"> Remind</i>
                                         </button>
                                         <button type="button" class="btn btn-secondary"
                                             (click)="modal.close('Close click')">Close

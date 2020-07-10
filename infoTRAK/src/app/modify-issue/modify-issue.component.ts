@@ -3,8 +3,11 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { Issue } from '../models/issue';
+import { SupportEngineer } from '../models/support-engineer';
+
 import { ModifyIssueService } from '../services/modify-issue.service';
-import { DashboardService } from '@app/services/dashboard.service';
+import { DashboardService } from '../services/dashboard.service';
+import { NavbarService } from '../services/navbar.service';
 
 
 @Component({
@@ -20,10 +23,12 @@ export class ModifyIssueComponent implements OnInit {
   error_message: any;
   success_message: any;
   editIssueForm: FormGroup;
+  support_engineers: SupportEngineer[];
 
 
   constructor(private modifyIssueService: ModifyIssueService,
     private dashboardService: DashboardService,
+    private navbarService: NavbarService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private formBuilder: FormBuilder) { }
@@ -32,6 +37,7 @@ export class ModifyIssueComponent implements OnInit {
     this.error_message;
     this.success_message;
     this.issueFile = null;
+    this.getSupportEngineers();
 
     this.activatedRoute.paramMap.subscribe((param: any) => {
       this.issue_id = param.params.id
@@ -50,6 +56,7 @@ export class ModifyIssueComponent implements OnInit {
           domain: [this.issue.domain],
           priority: [this.issue.priority],
           assigned_to: [this.issue.assigned_to],
+          support_engineer: [this.issue.support_engineer],
           issue_fixed_date: [this.issue.issue_fix_date],
           status: [this.issue.status],
           support_engineer_comments: [this.issue.support_engineer_comments]
@@ -86,6 +93,17 @@ export class ModifyIssueComponent implements OnInit {
           this.router.navigateByUrl('/')
         } else {
           this.error_message = res['error'];
+        }
+      });
+  }
+
+  getSupportEngineers () {
+    this.navbarService.getSupportEngineer()
+      .subscribe((support_engineers: any) => {
+        if (support_engineers) {
+          this.support_engineers = support_engineers.support_engineers;
+        } else {
+          this.support_engineers = null;
         }
       });
   }

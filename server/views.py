@@ -4,16 +4,19 @@ from flask_cors import CORS
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from server.config import UPLOAD_FOLDER
-from server.db import db, Issues, IssueSchema, IssuesSchema
+from server.db import db, Issues, SupportEngineers, IssueSchema, IssuesSchema, SupportEngineersSchema
 from server.forms import IssueForm
 from server.utils import email_service, get_recipients, add_issue_email_body, edit_issue_email_body, \
     assign_customer_data_to_issue, delete_old_file_from_folder, save_file_to_folder, get_reminder_email_content
 
 dashboard = Blueprint('dashboard', __name__)
+support_engineers = Blueprint('support_engineers', __name__,  url_prefix='/support-engineers')
 CORS(dashboard)
+CORS(support_engineers)
 
 issue_schema = IssueSchema()
 issues_schema = IssuesSchema(many=True)
+support_engineers_schema = SupportEngineersSchema(many=True)
 
 
 class Main(MethodView):
@@ -107,7 +110,9 @@ class Main(MethodView):
         if request.method == "DELETE" and issue_id and identity['role'] == 'admin':
             try:
                 issue = Issues.query.get(issue_id)
-                delete_old_file_from_folder(UPLOAD_FOLDER, issue.issue_file)
+
+                if issue.issue_file:
+                    delete_old_file_from_folder(UPLOAD_FOLDER, issue.issue_file)
 
                 db.session.delete(issue)
                 db.session.commit()
@@ -182,3 +187,59 @@ class IssueReminder(MethodView):
 
 
 dashboard.add_url_rule('/remind', view_func=IssueReminder.as_view('issue_reminder_email'))
+
+
+class User(MethodView):
+    decorators = [jwt_required]
+
+    def get(self):
+        identity = get_jwt_identity()
+
+        if request.method == "GET":
+            try:
+                response = SupportEngineers.query.all()
+                support_engineers_json_data = support_engineers_schema.dump(response)
+                return jsonify(support_engineers=support_engineers_json_data)
+            except Exception as e:
+                return jsonify(error=e)
+
+    def post(self):
+        identity = get_jwt_identity()
+
+        if request.method == "POST" and identity['role'] == 'admin':
+            new_support_engineer = request.get_json()
+            engineers = SupportEngineers()
+
+            try:
+                name = new_support_engineer['support_engineer_name']
+                if not engineers.query.filter_by(support_engineer_name=name).first():
+                    engineers.support_engineer_name = name
+                    db.session.add(engineers)
+                    db.session.commit()
+                    resp = jsonify(success=True)
+                else:
+                    resp = jsonify(error="Support engineer already exists")
+                return resp
+            except Exception as e:
+                resp = jsonify(error=e)
+                return resp
+
+    def delete(self, support_engineer_id):
+        identity = get_jwt_identity()
+
+        if request.method == "DELETE" and support_engineer_id and identity['role'] == 'admin':
+
+            try:
+                support_engineer = SupportEngineers.query.get(support_engineer_id)
+                db.session.delete(support_engineer)
+                db.session.commit()
+                resp = jsonify(success=True)
+                return resp
+            except Exception as e:
+                resp = jsonify(error=e)
+                return resp
+
+
+support_engineers.add_url_rule('/', view_func=User.as_view('get_engineers'))
+support_engineers.add_url_rule('/add', view_func=User.as_view('add_engineers'))
+support_engineers.add_url_rule('/delete/<int:support_engineer_id>', view_func=User.as_view('delete_engineers'))

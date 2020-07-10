@@ -160,6 +160,19 @@
                     </div>
 
                     <div class="form-group row">
+                        <label for="supportEngineer" class="col-sm-2 col-form-label">Support Engineer</label>
+                        <div class="col-sm-6">
+                            <select class="form-control" id="priority" formControlName="support_engineer">
+                                <option value="unassigned">Unassigned</option>
+                                <option *ngFor="let support_engineer of support_engineers"
+                                    value={{support_engineer.support_engineer_name}}>
+                                    {{support_engineer.support_engineer_name}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
                         <label for="issueFixedDate" class="col-sm-2 col-form-label">Expected Fix Date</label>
                         <div class="col-sm-6">
                             <input type="date" class="form-control" id="issueFixedDate"

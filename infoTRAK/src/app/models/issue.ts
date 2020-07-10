@@ -10,6 +10,7 @@ export class Issue {
     domain: string;
     priority: string;
     assigned_to: string;
+    support_engineer: string;
     issue_fix_date: string;
     status: string;
     support_engineer_comments: string;
