@@ -1,6 +1,7 @@
-<nav *ngIf="user" class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark" id="navbarHeader">
+<nav *ngIf="user" class="navbar fixed-top navbar-expand-lg" id="navbarHeader">
     <a class="navbar-brand" [routerLink]="['/']">
-        <h3><i>info</i>TRAK</h3>
+        <img src="../../assets/images/Logo_infospectrum-1-compressed.jpg"
+        style="width:175px;height:40px;" alt="infoTRAK">
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -17,6 +18,11 @@
 
                 <form enctype="multipart/form-data" [formGroup]="filterForm" (ngSubmit)="addFilter()">
                     <div class="dropdown-menu" id="mySelect" aria-labelledby="filters">
+
+                        <div class="dropdown-item">
+                            <b>Domain</b>
+                        </div>
+
                         <div class="dropdown-item">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="Fleet" formControlName="fleet">
@@ -24,16 +30,23 @@
                                     Fleet
                                 </label>
                             </div>
+                        </div>
+
+                        <div class="dropdown-item">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="HOS" formControlName="hos">
                                 <label class="form-check-label" for="HOS">
                                     HOS
                                 </label>
                             </div>
+                        </div>
 
-
+                        <div class="dropdown-item">
                             <div class="dropdown-divider"></div>
-                            <b>Sub-filter</b>
+                            <b>Status</b>
+                        </div>
+
+                        <div class="dropdown-item">
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" formControlName="status" id="all"
                                     value="All">
@@ -41,6 +54,9 @@
                                     All
                                 </label>
                             </div>
+                        </div>
+
+                        <div class="dropdown-item">
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" formControlName="status" id="Fixed"
                                     value="Fixed">
@@ -48,6 +64,9 @@
                                     Fixed
                                 </label>
                             </div>
+                        </div>
+
+                        <div class="dropdown-item">
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" formControlName="status" id="Working"
                                     value="Working">
@@ -55,14 +74,16 @@
                                     Working
                                 </label>
                             </div>
+                        </div>
 
+                        <div class="dropdown-item">
                             <div class="dropdown-divider"></div>
+                        </div>
 
-                            <div class="row justify-content-center">
-                                <div class="btn-group-vertical btn-group-lg">
-                                    <button class="btn btn-outline-primary" type="submit">Apply Filters</button>
-                                    <button class="btn btn-outline-secondary" (click)="clearFilter()">Clear All</button>
-                                </div>
+                        <div class="row justify-content-center">
+                            <div class="btn-group-vertical btn-group-lg">
+                                <button class="btn btn-outline-primary" type="submit">Apply Filters</button>
+                                <button class="btn btn-outline-secondary" (click)="clearFilter()">Clear All</button>
                             </div>
                         </div>
                     </div>
@@ -71,7 +92,7 @@
 
             <li class="nav-item">
                 <a class="nav-link" [routerLink]="['/add-issue']">
-                    <button class="btn btn-outline-info" type="button">
+                    <button class="btn" type="button">
                         <i class="fas fa-plus-square"></i> Add Issue
                     </button>
                 </a>
@@ -79,14 +100,14 @@
         </ul>
 
         <div class="mr-auto">
-            <h5>{{user.username | uppercase}}</h5>
+            <h5>{{user.username | titlecase}}</h5>
         </div>
 
         <form for="search-box" class="form-inline my-2 my-lg-0" action="#">
             <input #searchBox [(ngModel)]="searchValue" class="form-control mr-sm-2" type="search"
                 placeholder="Search Issue Keyword" aria-label="Search" name="searchbox">
 
-            <button class="btn btn-outline-success my-2 my-sm-0" type="button" [routerLink]="['/']"
+            <button class="btn btn-outline-dark my-2 my-sm-0" type="button" [routerLink]="['/']"
                 [queryParams]="{search_params: searchValue}">
                 Search
             </button>
@@ -97,7 +118,7 @@
                 <li class="nav-item mt-auto mb-auto dropdown">
 
                     <div class="btn-group dropleft">
-                        <button type="button" class="btn btn-outline-danger ml-sm-2 my-2 my-sm-0 dropdown-toggle"
+                        <button type="button" class="btn ml-sm-2 my-2 my-sm-0 dropdown-toggle"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <b>Settings <i class="fas fa-cog"></i></b>
                         </button>
@@ -107,12 +128,12 @@
                                 style="color: #1f1b1b;" (click)="openScrollableContent(longContent)">
                                 <i class="fas fa-user" style="color: #1f1b1b;"></i> Add Support Engineer
                             </span>
-                            <span class="dropdown-item" type="button" style="color: #1f1b1b;" (click)="logout()">
-                                <i class="fas fa-power-off" style="color: #1f1b1b;"></i> Logout
-                            </span>
                             <span class="dropdown-item" type="button" style="color: #1f1b1b;"
                                 (click)="passwordChange()">
                                 <i class="fa fa-key" style="color: #1f1b1b;"></i> Password Change
+                            </span>
+                            <span class="dropdown-item" type="button" style="color: #1f1b1b;" (click)="logout()">
+                                <i class="fas fa-power-off" style="color: #1f1b1b;"></i> Logout
                             </span>
                         </div>
 

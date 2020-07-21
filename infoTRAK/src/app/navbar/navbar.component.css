@@ -3,9 +3,21 @@ h3 {
 }
 
 .filter {
-    color: #f6c017;
+    color: black;
 }
 
 h5 {
-    color: white;
+    color: black;
+}
+
+.btn {
+    color: black;
+}
+
+.navbar.fixed-top.navbar-expand-lg {
+    background-color: white !important;
+}
+
+.dropdown-toggle {
+    color: black;
 }

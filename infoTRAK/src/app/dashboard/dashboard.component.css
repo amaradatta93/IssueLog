@@ -4,7 +4,7 @@ h4 {
 }
 
 .dashboard {
-    padding-top: 4%;
+    padding-top: 5%;
 }
 
 .status {
@@ -22,6 +22,10 @@ td {
 .description {
     max-width:500px;
     word-wrap:break-word;
+}
+
+th {
+    white-space: nowrap;
 }
 
 ul {
