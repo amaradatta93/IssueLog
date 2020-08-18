@@ -15,15 +15,15 @@ class Issues(db.Model):
     phone = db.Column(db.String(255), nullable=False)
     issue_report_date = db.Column(db.String(10), nullable=False)
     issue_description = db.Column(db.Text, nullable=False)
+    issue_file = db.Column(db.String(255), nullable=True)
     domain = db.Column(db.String(255), nullable=False)
     priority = db.Column(db.String(255), nullable=False)
     assigned_to = db.Column(db.String(255), nullable=False)
     support_engineer = db.Column(db.String(255), nullable=False)
-    issue_fix_date = db.Column(db.String(10), nullable=False)
+    issue_fix_date = db.Column(db.String(10), nullable=True)
     status = db.Column(db.String(255), nullable=False)
     support_engineer_comments = db.Column(db.Text, nullable=True)
     user_id = db.Column(db.Integer(), db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
-    issue_file = db.Column(db.String(255), nullable=True)
 
 
 class IssueSchema(ma.Schema):

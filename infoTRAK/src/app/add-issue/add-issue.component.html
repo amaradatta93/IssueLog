@@ -159,7 +159,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group row">
+                    <div *ngIf="user.role === 'admin'" class="form-group row">
                         <label for="supportEngineer" class="col-sm-2 col-form-label">Support Engineer</label>
                         <div class="col-sm-6">
                             <select class="form-control" id="priority" formControlName="support_engineer">
@@ -172,21 +172,15 @@
                         </div>
                     </div>
 
-                    <div class="form-group row">
+                    <div *ngIf="user.role === 'admin'" class="form-group row">
                         <label for="issueFixedDate" class="col-sm-2 col-form-label">Expected Fix Date</label>
                         <div class="col-sm-6">
                             <input type="date" class="form-control" id="issueFixedDate"
                                 formControlName="issue_fixed_date">
                         </div>
                     </div>
-                    <div>
-                        <label class="error-msg"
-                            *ngIf="isRequired(addIssueForm, 'issue_fixed_date') && isTouched(addIssueForm,'issue_fixed_date')">
-                            Field Required
-                        </label>
-                    </div>
 
-                    <div class="form-group row">
+                    <div *ngIf="user.role === 'admin'" class="form-group row">
                         <label for="status" class="col-sm-2 col-form-label">Status</label>
                         <div class="col-sm-6">
                             <select class="form-control" id="status" formControlName="status">
@@ -196,7 +190,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group row">
+                    <div *ngIf="user.role === 'admin'" class="form-group row">
                         <label for="supportEngineerComments" class="col-sm-2 col-form-label">Support Engineer
                             Comments</label>
                         <div class="col-sm-6">

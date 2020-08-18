@@ -139,7 +139,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group row">
+                    <div *ngIf="user.role === 'admin'" class="form-group row">
                         <label for="priority" class="col-sm-2 col-form-label">Priority</label>
                         <div class="col-sm-6">
                             <select class="form-control" id="priority" formControlName="priority">
@@ -150,7 +150,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group row">
+                    <div *ngIf="user.role === 'admin'" class="form-group row">
                         <label for="assignedTo" class="col-sm-2 col-form-label">Assigned To</label>
                         <div class="col-sm-6">
                             <select class="form-control" id="assignedTo" formControlName="assigned_to">
@@ -161,7 +161,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group row">
+                    <div *ngIf="user.role === 'admin'" class="form-group row">
                         <label for="supportEngineer" class="col-sm-2 col-form-label">Support Engineer</label>
                         <div class="col-sm-6">
                             <select class="form-control" id="priority" formControlName="support_engineer">
@@ -178,11 +178,11 @@
                         <label for="issueFixedDate" class="col-sm-2 col-form-label">Expected Fix Date</label>
                         <div class="col-sm-6">
                             <input type="date" class="form-control" id="issueFixedDate"
-                                formControlName="issue_fixed_date">
+                                formControlName="issue_fixed_date" [readonly]="isReadOnly">
                         </div>
                     </div>
 
-                    <div class="form-group row">
+                    <div *ngIf="user.role === 'admin'" class="form-group row">
                         <label for="status" class="col-sm-2 col-form-label">Status</label>
                         <div class="col-sm-6">
                             <select class="form-control" id="status" formControlName="status">
@@ -197,7 +197,8 @@
                             Comments</label>
                         <div class="col-sm-6">
                             <textarea class="form-control" id="supportEngineerComments" rows="2"
-                                formControlName="support_engineer_comments"></textarea>
+                                formControlName="support_engineer_comments" [readonly]="isReadOnly">
+                            </textarea>
                         </div>
                     </div>
 
@@ -218,7 +219,7 @@
                 </fieldset>
             </form>
 
-            <div class="row mb-3 justify-content-center align-items-center">
+            <div *ngIf="user.role === 'admin'" class="row mb-3 justify-content-center align-items-center">
                 <div class="col-md-12">
                     <form enctype="multipart/form-data" method="DELETE" (ngSubmit)="onSubmitDelete()">
                         <div class="col-sm-3">

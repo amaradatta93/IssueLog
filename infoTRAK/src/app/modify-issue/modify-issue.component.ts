@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { Issue } from '../models/issue';
+import { UserDetails } from '../models/user';
 import { SupportEngineer } from '../models/support-engineer';
 
 import { ModifyIssueService } from '../services/modify-issue.service';
@@ -19,9 +20,11 @@ export class ModifyIssueComponent implements OnInit {
   issue: Issue;
   issue_id: number;
   issueFile: File;
+  isReadOnly: boolean;
   blob: Blob;
   error_message: any;
   success_message: any;
+  user: UserDetails;
   editIssueForm: FormGroup;
   support_engineers: SupportEngineer[];
 
@@ -37,6 +40,7 @@ export class ModifyIssueComponent implements OnInit {
     this.error_message;
     this.success_message;
     this.issueFile = null;
+    this.getUser();
     this.getSupportEngineers();
 
     this.activatedRoute.paramMap.subscribe((param: any) => {
@@ -64,6 +68,19 @@ export class ModifyIssueComponent implements OnInit {
       });
     })
 
+  }
+
+  getUser() {
+    this.navbarService.getUserDetails()
+      .subscribe(user => {
+        this.user = user;
+        if(user.role === "admin") {
+          this.isReadOnly = false;
+        }
+        if (user.role === "user"){
+          this.isReadOnly = true;
+        }
+      })
   }
 
   onSubmit() {

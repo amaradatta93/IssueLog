@@ -7,6 +7,7 @@ import { NavbarService } from '../services/navbar.service';
 import { FormValidator } from '../_helpers/validator';
 
 import { SupportEngineer } from '../models/support-engineer';
+import { UserDetails } from '../models/user';
 
 @Component({
   selector: 'app-add-issue',
@@ -18,6 +19,7 @@ export class AddIssueComponent extends FormValidator implements OnInit {
   success_message: any;
   issueFile: File;
   addIssueForm: FormGroup;
+  user: UserDetails;
   support_engineers: SupportEngineer[];
 
   constructor(private formBuilder: FormBuilder,
@@ -32,6 +34,7 @@ export class AddIssueComponent extends FormValidator implements OnInit {
     this.success_message = null;
     this.issueFile = null;
     this.getSupportEngineers();
+    this.getUser();
 
     this.addIssueForm = this.formBuilder.group({
       customer_name: ['', Validators.required],
@@ -53,6 +56,10 @@ export class AddIssueComponent extends FormValidator implements OnInit {
 
   }
 
+  getUser() {
+    this.navbarService.getUserDetails()
+      .subscribe(user => this.user = user)
+  }
 
   getSupportEngineers () {
     this.navbarService.getSupportEngineer()
